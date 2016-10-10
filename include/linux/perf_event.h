@@ -334,10 +334,12 @@ struct perf_event {
 
 	struct hlist_node		hlist_entry;
 	struct list_head		active_entry;
-	int				nr_siblings;
-	int				group_flags;
+	int				        nr_siblings;
+	int				        group_flags;
 	struct perf_event		*group_leader;
-	struct pmu			*pmu;
+	/* Protect the pmu, attributes and context of a group leader*/
+	struct mutex			group_leader_mutex;
+	struct pmu			    *pmu;
 
 	enum perf_event_active_state	state;
 	unsigned int			attach_state;
