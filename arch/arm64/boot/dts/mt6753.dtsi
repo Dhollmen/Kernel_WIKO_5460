@@ -112,6 +112,7 @@ initrd=0x44000000,0x300000 loglevel=8 androidboot.hardware=mt6735";
 			cpu-idle-states = <&cluster_sleep_0 &cluster_sleep_0 &cpu_sleep_0_0 &cpu_sleep_0_0>;
 			cpu-release-addr = <0x0 0x40000200>;
 			clock-frequency = <1300000000>;
+			sched-energy-costs = <&CPU_COST_0 &CLUSTER_COST_0>;
 		};
 
 		cpu1: cpu@001 {
@@ -122,6 +123,7 @@ initrd=0x44000000,0x300000 loglevel=8 androidboot.hardware=mt6735";
 			cpu-idle-states = <&cluster_sleep_0 &cluster_sleep_0 &cpu_sleep_0_0 &cpu_sleep_0_0>;
 			cpu-release-addr = <0x0 0x40000200>;
 			clock-frequency = <1300000000>;
+			sched-energy-costs = <&CPU_COST_0 &CLUSTER_COST_0>;
 		};
 
 		cpu2: cpu@002 {
@@ -132,6 +134,7 @@ initrd=0x44000000,0x300000 loglevel=8 androidboot.hardware=mt6735";
 			cpu-idle-states = <&cluster_sleep_0 &cluster_sleep_0 &cpu_sleep_0_0 &cpu_sleep_0_0>;
 			cpu-release-addr = <0x0 0x40000200>;
 			clock-frequency = <1300000000>;
+			sched-energy-costs = <&CPU_COST_0 &CLUSTER_COST_0>;
 		};
 
 		cpu3: cpu@003 {
@@ -142,6 +145,7 @@ initrd=0x44000000,0x300000 loglevel=8 androidboot.hardware=mt6735";
 			cpu-idle-states = <&cluster_sleep_0 &cluster_sleep_0 &cpu_sleep_0_0 &cpu_sleep_0_0>;
 			cpu-release-addr = <0x0 0x40000200>;
 			clock-frequency = <1300000000>;
+			sched-energy-costs = <&CPU_COST_0 &CLUSTER_COST_0>;
 		};
 
 		cpu4: cpu@100 {
@@ -152,6 +156,7 @@ initrd=0x44000000,0x300000 loglevel=8 androidboot.hardware=mt6735";
 			cpu-idle-states = <&cluster_sleep_0 &cluster_sleep_0 &cpu_sleep_0_0 &cpu_sleep_0_0>;
 			cpu-release-addr = <0x0 0x40000200>;
 			clock-frequency = <1300000000>;
+			sched-energy-costs = <&CPU_COST_0 &CLUSTER_COST_0>;
 		};
 
 		cpu5: cpu@101 {
@@ -162,6 +167,7 @@ initrd=0x44000000,0x300000 loglevel=8 androidboot.hardware=mt6735";
 			cpu-idle-states = <&cluster_sleep_0 &cluster_sleep_0 &cpu_sleep_0_0 &cpu_sleep_0_0>;
 			cpu-release-addr = <0x0 0x40000200>;
 			clock-frequency = <1300000000>;
+			sched-energy-costs = <&CPU_COST_0 &CLUSTER_COST_0>;
 		};
 
 		cpu6: cpu@102 {
@@ -172,6 +178,7 @@ initrd=0x44000000,0x300000 loglevel=8 androidboot.hardware=mt6735";
 			cpu-idle-states = <&cluster_sleep_0 &cluster_sleep_0 &cpu_sleep_0_0 &cpu_sleep_0_0>;
 			cpu-release-addr = <0x0 0x40000200>;
 			clock-frequency = <1300000000>;
+			sched-energy-costs = <&CPU_COST_0 &CLUSTER_COST_0>;
 		};
 
 		cpu7: cpu@103 {
@@ -182,6 +189,7 @@ initrd=0x44000000,0x300000 loglevel=8 androidboot.hardware=mt6735";
 			cpu-idle-states = <&cluster_sleep_0 &cluster_sleep_0 &cpu_sleep_0_0 &cpu_sleep_0_0>;
 			cpu-release-addr = <0x0 0x40000200>;
 			clock-frequency = <1300000000>;
+			sched-energy-costs = <&CPU_COST_0 &CLUSTER_COST_0>;
 		};
 
 		cpu-map {
@@ -213,6 +221,40 @@ initrd=0x44000000,0x300000 loglevel=8 androidboot.hardware=mt6735";
 				core3 {
 					cpu = <&cpu7>;
 				};
+			};
+		};
+
+		energy-costs {
+			CPU_COST_0: core-cost0 {
+				busy-cost-data = <
+					184    48
+					266    66
+					378   115
+					419   137
+					450   156
+					532   217
+					573   251
+					593   273
+				>;
+				idle-cost-data = <
+					0
+				>;
+			};
+			CLUSTER_COST_0: cluster-cost0 {
+				busy-cost-data = <
+					184    74
+					266   104
+					378   151
+					419   168
+					450   181
+					532   220
+					573   238
+					593   250
+				>;
+				idle-cost-data = <
+					110
+					105
+				>;
 			};
 		};
 
