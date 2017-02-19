@@ -60,10 +60,10 @@ obj-$(CONFIG_CXL_BASE)		+= cxl/
 obj-$(CONFIG_UID_CPUTIME) += uid_cputime.o
 obj-$(CONFIG_MEDIATEK_SOLUTION)	+= mediatek/
 
-
-WIKO_UNIFY_DEF := $(strip $(subst ro.wiko.type =,,$(shell cat $(PWD)/build.ini |grep ^ro.wiko.type)))
+WIKO_UNIFY_DEF := $(WIKO_TYPE)
 ifeq ($(strip $(WIKO_UNIFY_DEF)),unify)
 ccflags-y += -DCONFIG_WIKO_UNIFY
 obj-y += sensor_state.o 
-$(warning ---add marco CONFIG_WIKO_UNIFY---)
+else
+$(warning "No flag to WIKO_UNIFY_DEF")
 endif

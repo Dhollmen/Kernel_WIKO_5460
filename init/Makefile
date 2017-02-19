@@ -21,24 +21,12 @@ mounts-$(CONFIG_BLK_DEV_MD)	+= do_mounts_md.o
 # dependencies on generated files need to be listed explicitly
 $(obj)/version.o: include/generated/compile.h
 
-
-WIKO_UNIFY_DEF := $(strip $(subst ro.wiko.type =,,$(shell cat $(PWD)/../../../../../../build.ini |grep ^ro.wiko.type)))
+WIKO_UNIFY_DEF := $(WIKO_TYPE)
 ifeq ($(strip $(WIKO_UNIFY_DEF)),unify)
-$(warning -wlj--PWD= $(PWD)-------)
-$(warning -wlj--WIKO_UNIFY_DEF= $(WIKO_UNIFY_DEF))
 ccflags-y += -DCONFIG_WIKO_UNIFY
-$(warning -wlj---ccflags-y += -DCONFIG_WIKO_UNIFY---)
+else
+$(warning "No flag to WIKO_UNIFY_DEF")
 endif
-
-WIKO_UNIFY_DEF := $(strip $(subst ro.wiko.type =,,$(shell cat $(PWD)/build.ini |grep ^ro.wiko.type)))
-ifeq ($(strip $(WIKO_UNIFY_DEF)),unify)
-$(warning -wlj--PWD= $(PWD)-------)
-$(warning -wlj--WIKO_UNIFY_DEF= $(WIKO_UNIFY_DEF))
-ccflags-y += -DCONFIG_WIKO_UNIFY
-$(warning -wlj---ccflags-y += -DCONFIG_WIKO_UNIFY---)
-endif
-
-
 
 # compile.h changes depending on hostname, generation number, etc,
 # so we regenerate it always.

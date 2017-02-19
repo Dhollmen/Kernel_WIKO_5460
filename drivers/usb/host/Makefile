@@ -83,9 +83,9 @@ obj-$(CONFIG_USB_FUSBH200_HCD)	+= fusbh200-hcd.o
 obj-$(CONFIG_USB_FOTG210_HCD)	+= fotg210-hcd.o
 obj-$(CONFIG_USB_MAX3421_HCD)	+= max3421-hcd.o
 
-WIKO_UNIFY_DEF := $(strip $(subst ro.wiko.type =,,$(shell cat $(PWD)/build.ini |grep ^ro.wiko.type)))
+WIKO_UNIFY_DEF := $(WIKO_TYPE)
 ifeq ($(strip $(WIKO_UNIFY_DEF)),unify)
 ccflags-y += -DCONFIG_WIKO_UNIFY
-$(warning ---add marco CONFIG_WIKO_UNIFY---)
+else
+$(warning "No flag to WIKO_UNIFY_DEF")
 endif
-

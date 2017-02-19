@@ -33,10 +33,11 @@ ifeq ($(CONFIG_MTK_ECCCI_CLDMA), y)
 ccci-y += modem_cldma.o
 endif
 
-WIKO_UNIFY_DEF := $(strip $(subst ro.wiko.type =,,$(shell cat $(PWD)/build.ini |grep ^ro.wiko.type)))
+WIKO_UNIFY_DEF := $(WIKO_TYPE)
 ifeq ($(strip $(WIKO_UNIFY_DEF)),unify)
 ccflags-y += -DCONFIG_WIKO_UNIFY
-$(warning ---add marco CONFIG_WIKO_UNIFY---)
+else
+$(warning "No flag to WIKO_UNIFY_DEF")
 endif
 
 # make sure modem_cldma.c run before modem_ccif_c2k.c, because when IRAT, c2k will use md1's ccmni
