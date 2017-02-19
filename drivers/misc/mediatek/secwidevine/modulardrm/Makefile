@@ -2,8 +2,6 @@
 ifneq ($(MTK_ROOT_BUILD),)
     $(info "MTK_ROOT_BUILD secwidevinemdw")
     include $(MTK_ROOT_BUILD)/Makefile
-else
-    $(info "custom build secwidevinemdw")
 endif
 
 ifeq ($(CONFIG_TRUSTONIC_TEE_SUPPORT),y)
