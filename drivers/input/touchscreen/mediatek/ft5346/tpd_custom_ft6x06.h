@@ -265,10 +265,10 @@ extern int ft6x0x_create_apk_debug_channel(struct i2c_client * client);
 extern void ft6x0x_release_apk_debug_channel(void);
 
 
-#if 1
-#define CTP_DBG(fmt, arg...) \
+#if 0
+//#define CTP_DBG(fmt, arg...) \
 	printk("[CTP-FT5436I] %s (line:%d) :" fmt "\r\n", __func__, __LINE__, ## arg)
-#define TPD_PROXIMITY_DBG(fmt, arg...) \
+//#define TPD_PROXIMITY_DBG(fmt, arg...) \
 	printk("[CTP-proxi_6x06] %s (line:%d) :" fmt "\r\n", __func__, __LINE__, ## arg)
 //#define CTP_DBG(fmt, arg...) do {} while (0)	
 #else
