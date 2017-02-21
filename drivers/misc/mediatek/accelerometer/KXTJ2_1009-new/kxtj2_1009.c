@@ -66,11 +66,11 @@
 #define KXTJ2_1009_DATA_LEN        6
 #define KXTJ2_1009_DEV_NAME        "KXTJ2_1009"
 /*----------------------------------------------------------------------------*/
-struct acc_hw accel_cust;
-static struct acc_hw *hw = &accel_cust;
+struct acc_hw kaccel_cust;
+static struct acc_hw *hw = &kaccel_cust;
 struct acc_hw *get_cust_acc_hw(void)
 {
-	return &accel_cust;
+	return &kaccel_cust;
 }
 
 /*----------------------------------------------------------------------------*/
