@@ -856,12 +856,12 @@ static void get_md_postfix(int md_id, char k[], char buf[], char buf_ex[])
 
     if (buf){
         strcat(buf, suffix);
-        printk("==========get_md_postfix buf=%s==========\n",buf);
+        //printk("==========get_md_postfix buf=%s==========\n",buf);
     }
 
     if (buf_ex){
         strcat(buf_ex, suffix_ex);
-        printk("==========get_md_postfix buf=%s==========\n",buf_ex);
+        //printk("==========get_md_postfix buf=%s==========\n",buf_ex);
     }
 }
 #endif

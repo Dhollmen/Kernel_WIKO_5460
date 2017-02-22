@@ -15,6 +15,7 @@ extern unsigned int ccci_debug_enable;
 extern int ccci_log_write(const char *fmt, ...);
 
 /* for detail log, default off (ccci_debug_enable == 0) */
+#if 0
 #define CCCI_DBG_MSG(idx, tag, fmt, args...) \
 do { \
 	if (ccci_debug_enable == 1) \
@@ -24,7 +25,12 @@ do { \
 	else if (ccci_debug_enable == 6) \
 		pr_err("[md%d]" fmt, (idx+1), ##args); \
 } while (0)
+#else
+#define CCCI_DBG_MSG(idx, tag, fmt, args...) do {} while (0)
+#endif
+
 /* for normal log, print to RAM by default, print to UART when needed */
+#if 0
 #define CCCI_INF_MSG(idx, tag, fmt, args...) \
 do { \
 	if (ccci_debug_enable == 0 || ccci_debug_enable == 1) \
@@ -34,8 +40,12 @@ do { \
 	else if (ccci_debug_enable == 5 || ccci_debug_enable == 6) \
 		pr_err("[md%d]" fmt, (idx+1), ##args); \
 } while (0)
+#else
+#define CCCI_INF_MSG(idx, tag, fmt, args...) do {} while (0)
+#endif
 
 /* for traffic log, print to RAM by default, print to UART when needed */
+#if 0
 #define CCCI_REP_MSG(idx, tag, fmt, args...) \
 do { \
 	if (ccci_debug_enable == 0 || ccci_debug_enable == 1) \
@@ -45,6 +55,9 @@ do { \
 	else if (ccci_debug_enable == 5 || ccci_debug_enable == 6) \
 		pr_err("[md%d]" fmt, (idx+1), ##args); \
 } while (0)
+#else
+#define CCCI_REP_MSG(idx, tag, fmt, args...) do {} while (0)
+#endif
 
 /* for critical init log*/
 #define CCCI_NOTICE_MSG(idx, tag, fmt, args...) pr_notice("[md%d/ntc]" fmt, (idx+1), ##args)
