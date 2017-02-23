@@ -26,26 +26,18 @@
 
 #include <mt-plat/upmu_common.h>
 #include <mach/upmu_sw.h>
-/*#include <mach/eint.h> TBD*/
 #include <mach/mt_pmic_wrap.h>
 #if defined CONFIG_MTK_LEGACY
 #include <mt-plat/mt_gpio.h>
 #endif
-/*#include <mach/mtk_rtc.h> TBD*/
 #include <mach/mt_spm_mtcmos.h>
-
 #if defined(CONFIG_MTK_SMART_BATTERY)
 #include <mt-plat/battery_meter.h>
 #include <mt-plat/battery_common.h>
 #endif
 #include <linux/time.h>
-/*#include <mach/pmic_mt6328_sw.h>*/
-
 #include <mach/mt_pmic.h>
-//#include <mach/mt_battery_meter.h>
 #include "cust_battery_meter.h"
-
-
 
 /*
  * PMIC-AUXADC related define
@@ -61,11 +53,7 @@
  */
 
 #define PMICTAG                "[Auxadc] "
-#if defined PMIC_DEBUG_PR_DBG
-#define PMICLOG2(fmt, arg...)   pr_err(PMICTAG fmt, ##arg)
-#else
 #define PMICLOG2(fmt, arg...)
-#endif
 
 signed int count_time_out = 15;
 struct wake_lock pmicAuxadc_irq_lock;
@@ -155,7 +143,6 @@ signed int PMIC_IMM_GetCurrent(void)
 }
 
 
-
 /*
  * PMIC-AUXADC
  */
@@ -167,31 +154,6 @@ unsigned int PMIC_IMM_GetOneChannelValue(pmic_adc_ch_list_enum dwChannel, int de
 	signed int adc_result = 0;
 	int count = 0;
 	unsigned int busy;
-	/*
-	   CH0: BATSNS
-	   CH1: ISENSE
-	   CH2: VCDT
-	   CH3: BAT ON
-	   CH4: PMIC TEMP
-	   CH5: ACCDET
-	   CH6:
-	   CH7: TSX
-	   CH8:
-	   CH9:
-	   CH10:
-	   CH11:
-	   CH12:
-	   CH13:
-	   CH14:
-	   CH15:
-	   BATSNS 3v-4.5v
-	   ISENSE 1.5-4.5v
-	   BATON  0-1.8v
-	   VCDT   4v-14v
-	   ACCDET 1.8v
-	   GPS    1.8v
-
-	 */
 
 	if (dwChannel > 15)
 		return -1;
@@ -203,7 +165,6 @@ unsigned int PMIC_IMM_GetOneChannelValue(pmic_adc_ch_list_enum dwChannel, int de
 	pmic_set_register_value(PMIC_RG_CLKSQ_EN_AUX_AP_MODE, 1);
 
 	/*upmu_set_reg_value(0x0a44,0x010a);*/
-
 
 	wake_lock(&pmicAuxadc_irq_lock);
 	mutex_lock(&pmic_adc_mutex);
@@ -440,7 +401,6 @@ unsigned int PMIC_IMM_GetOneChannelValue(pmic_adc_ch_list_enum dwChannel, int de
 
 	mutex_unlock(&pmic_adc_mutex);
 	wake_unlock(&pmicAuxadc_irq_lock);
-	/*PMICLOG2("[AUXADC] ch=%d raw=%d data=%d\n", dwChannel, ret_data,adc_result);*/
 
 	/*return ret_data;*/
 	return adc_result;
@@ -454,18 +414,8 @@ unsigned int PMIC_IMM_GetOneChannelValueMD(unsigned char dwChannel, int deCount,
 	signed int r_val_temp = 0;
 	signed int adc_result = 0;
 	int count = 0;
-	/*
-	   CH0: BATSNS
-	   CH1: ISENSE
-	   CH4: PMIC TEMP
-	   CH7: TSX by MD
-	   CH8: TSX by GPS
-
-	 */
-
 	if (dwChannel != 0 && dwChannel != 1 && dwChannel != 4 && dwChannel != 7 && dwChannel != 8)
 		return -1;
-
 
 	wake_lock(&pmicAuxadc_irq_lock);
 

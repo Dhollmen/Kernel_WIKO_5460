@@ -124,27 +124,13 @@ static DEFINE_MUTEX(pmic_lock_mutex);
  * PMIC read/write APIs
  ******************************************************************************/
 #if 0				/*defined(CONFIG_MTK_FPGA) */
-    /* no CONFIG_PMIC_HW_ACCESS_EN */
+/* no CONFIG_PMIC_HW_ACCESS_EN */
 #else
 #define CONFIG_PMIC_HW_ACCESS_EN
 #endif
 
 #define PMICTAG                "[PMIC] "
-#if defined PMIC_DEBUG_PR_DBG
-#define PMICLOG(fmt, arg...)   pr_err(PMICTAG fmt, ##arg)
-#else
 #define PMICLOG(fmt, arg...)
-#endif
-
-#ifdef CONFIG_OF
-#if !defined CONFIG_MTK_LEGACY
-/*
-static int pmic_mt_cust_probe(struct platform_device *pdev);
-static int pmic_mt_cust_remove(struct platform_device *pdev);
-static int pmic_regulator_ldo_init(struct platform_device *pdev);
-*/
-#endif
-#endif				/* End of #ifdef CONFIG_OF */
 
 static DEFINE_MUTEX(pmic_access_mutex);
 /*--- Global suspend state ---*/
@@ -232,22 +218,7 @@ unsigned int pmic_config_interface(unsigned int RegNum, unsigned int val, unsign
 	}
 	/*PMICLOG"[pmic_config_interface] write Reg[%x]=0x%x\n", RegNum, pmic_reg); */
 
-#if 0
-	/*3. Double Check */
-	/*mt_read_byte(RegNum, &pmic_reg); */
-	return_value = pwrap_wacs2(0, (RegNum), 0, &rdata);
-	pmic_reg = rdata;
-	if (return_value != 0) {
-		PMICLOG("[pmic_config_interface] Reg[%x]= pmic_wrap write data fail\n", RegNum);
-		mutex_unlock(&pmic_access_mutex);
-		return return_value;
-	}
-	PMICLOG("[pmic_config_interface] Reg[%x]=0x%x\n", RegNum, pmic_reg);
-#endif
-
 	mutex_unlock(&pmic_access_mutex);
-#else
-	/*PMICLOG("[pmic_config_interface] Can not access HW PMIC\n"); */
 #endif
 
 	return return_value;
@@ -262,7 +233,6 @@ unsigned int pmic_read_interface_nolock(unsigned int RegNum, unsigned int *val, 
 	unsigned int pmic_reg = 0;
 	unsigned int rdata;
 
-
 	/*mt_read_byte(RegNum, &pmic_reg); */
 	return_value = pwrap_wacs2(0, (RegNum), 0, &rdata);
 	pmic_reg = rdata;
@@ -271,14 +241,9 @@ unsigned int pmic_read_interface_nolock(unsigned int RegNum, unsigned int *val, 
 		mutex_unlock(&pmic_access_mutex);
 		return return_value;
 	}
-	/*PMICLOG"[pmic_read_interface] Reg[%x]=0x%x\n", RegNum, pmic_reg); */
 
 	pmic_reg &= (MASK << SHIFT);
 	*val = (pmic_reg >> SHIFT);
-	/*PMICLOG"[pmic_read_interface] val=0x%x\n", *val); */
-
-#else
-	/*PMICLOG("[pmic_read_interface] Can not access HW PMIC\n"); */
 #endif
 
 	return return_value;
@@ -303,8 +268,6 @@ unsigned int pmic_config_interface_nolock(unsigned int RegNum, unsigned int val,
 		mutex_unlock(&pmic_access_mutex);
 		return return_value;
 	}
-	/*PMICLOG"[pmic_config_interface] Reg[%x]=0x%x\n", RegNum, pmic_reg); */
-
 	pmic_reg &= ~(MASK << SHIFT);
 	pmic_reg |= (val << SHIFT);
 
@@ -315,23 +278,6 @@ unsigned int pmic_config_interface_nolock(unsigned int RegNum, unsigned int val,
 		mutex_unlock(&pmic_access_mutex);
 		return return_value;
 	}
-	/*PMICLOG"[pmic_config_interface] write Reg[%x]=0x%x\n", RegNum, pmic_reg); */
-
-#if 0
-	/*3. Double Check */
-	/*mt_read_byte(RegNum, &pmic_reg); */
-	return_value = pwrap_wacs2(0, (RegNum), 0, &rdata);
-	pmic_reg = rdata;
-	if (return_value != 0) {
-		PMICLOG("[pmic_config_interface] Reg[%x]= pmic_wrap write data fail\n", RegNum);
-		mutex_unlock(&pmic_access_mutex);
-		return return_value;
-	}
-	PMICLOG("[pmic_config_interface] Reg[%x]=0x%x\n", RegNum, pmic_reg);
-#endif
-
-#else
-	/*PMICLOG("[pmic_config_interface] Can not access HW PMIC\n"); */
 #endif
 
 	return return_value;
@@ -823,9 +769,6 @@ static int mtk_regulator_list_voltage(struct regulator_dev *rdev, unsigned selec
 	return voltage;
 }
 
-
-
-
 static struct regulator_ops mtk_regulator_ops = {
 	.enable = mtk_regulator_enable,
 	.disable = mtk_regulator_disable,
@@ -1149,13 +1092,6 @@ static struct mtk_regulator mtk_bucks[] = {
 
 #if !defined CONFIG_MTK_LEGACY
 #ifdef CONFIG_OF
-/*
-#define PMIC_REGULATOR_OF_MATCH(_name, _id)			\
-[MT6328_POWER_LDO_##_id] = {						\
-	.name = #_name,						\
-	.driver_data = &mtk_ldos[MT6328_POWER_LDO_##_id],	\
-}
-*/
 #define PMIC_REGULATOR_OF_MATCH(_name, _id)			\
 	{						\
 		.name = #_name,						\
