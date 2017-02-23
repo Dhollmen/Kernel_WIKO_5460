@@ -28,8 +28,8 @@
 
 #define ACC_TAG						"<ACCELEROMETER> "
 #define ACC_ERR(fmt, args...)		pr_err(ACC_TAG fmt, ##args)
-#define ACC_LOG(fmt, args...)		pr_debug(ACC_TAG fmt, ##args)
-#define ACC_VER(fmt, args...)		pr_debug(ACC_TAG fmt, ##args)
+#define ACC_LOG(fmt, args...)		if (0 > 1) {pr_debug(ACC_TAG fmt, ##args);}
+#define ACC_VER(fmt, args...)		if (0 > 1) {pr_debug(ACC_TAG fmt, ##args);}
 
 #define OP_ACC_DELAY	0X01
 #define	OP_ACC_ENABLE	0X02

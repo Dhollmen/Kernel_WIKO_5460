@@ -152,9 +152,9 @@ static char selftestRes[8] = { 0 };
 
 /*----------------------------------------------------------------------------*/
 #define GSE_TAG                  "[Gsensor] "
-#define GSE_FUN(f)               pr_debug(GSE_TAG"%s\n", __func__)
+#define GSE_FUN(f)               if(0 > 1) {pr_debug(GSE_TAG"%s\n", __func__);}
 #define GSE_ERR(fmt, args...)    pr_err(GSE_TAG"%s %d : "fmt, __func__, __LINE__, ##args)
-#define GSE_LOG(fmt, args...)    pr_debug(GSE_TAG fmt, ##args)
+#define GSE_LOG(fmt, args...)    if(0 > 1) {pr_debug(GSE_TAG fmt, ##args);}
 /*----------------------------------------------------------------------------*/
 static struct data_resolution mpu6050_data_resolution[] = {
 	/*8 combination by {FULL_RES,RANGE} */
@@ -1472,10 +1472,11 @@ int gsensor_operate(void *self, uint32_t command, void *buff_in, int size_in,
 			err = -EINVAL;
 		} else {
 			value = *(int *)buff_in;
-			if (((value == 0) && (sensor_power == false)) || ((value == 1) && (sensor_power == true)))
+			if (((value == 0) && (sensor_power == false)) || ((value == 1) && (sensor_power == true))) {
 				GSE_LOG("Gsensor device have updated!\n");
-			else
+            } else {
 				err = MPU6050_SetPowerMode(priv->client, !sensor_power);
+            }
 		}
 		break;
 
