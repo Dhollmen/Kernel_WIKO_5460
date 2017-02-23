@@ -240,29 +240,29 @@ static int FindTaskByName(char *name)
 	for_each_process(task) {
 		if (task && (strcmp(task->comm, "init") == 0)) {
 			init_pid = task->pid;
-			LOGE("[Hang_Detect] %s found pid:%d.\n", task->comm, task->pid);
+			//LOGE("[Hang_Detect] %s found pid:%d.\n", task->comm, task->pid);
 		} else if (task && (strcmp(task->comm, "mmcqd/0") == 0)) {
 			mmcqd0 = task->pid;
-			LOGE("[Hang_Detect] %s found pid:%d.\n", task->comm, task->pid);
+			//LOGE("[Hang_Detect] %s found pid:%d.\n", task->comm, task->pid);
 		} else if (task && (strcmp(task->comm, "mmcqd/1") == 0)) {
 			mmcqd1 = task->pid;
-			LOGE("[Hang_Detect] %s found pid:%d.\n", task->comm, task->pid);
+			//LOGE("[Hang_Detect] %s found pid:%d.\n", task->comm, task->pid);
 		} else if (task && (strcmp(task->comm, "surfaceflinger") == 0)) {
 			surfaceflinger_pid = task->pid;
-			LOGE("[Hang_Detect] %s found pid:%d.\n", task->comm, task->pid);
+			//LOGE("[Hang_Detect] %s found pid:%d.\n", task->comm, task->pid);
 		} else if (task && (strcmp(task->comm, "debuggerd") == 0)) {
 			debuggerd = task->pid;
-			LOGE("[Hang_Detect] %s found pid:%d.\n", task->comm, task->pid);
+			//LOGE("[Hang_Detect] %s found pid:%d.\n", task->comm, task->pid);
 		} else if (task && (strcmp(task->comm, "debuggerd64") == 0)) {
 			debuggerd64 = task->pid;
-			LOGE("[Hang_Detect] %s found pid:%d.\n", task->comm, task->pid);
+			//LOGE("[Hang_Detect] %s found pid:%d.\n", task->comm, task->pid);
 		} else if (task && (strcmp(task->comm, name) == 0)) {
 			system_server_pid = task->pid;
-			LOGE("[Hang_Detect] %s found pid:%d.\n", task->comm, task->pid);
+			//LOGE("[Hang_Detect] %s found pid:%d.\n", task->comm, task->pid);
 			/* return task->pid; */
 		} else if (task && (strstr(task->comm, "systemui"))) {
 			system_ui_pid = task->pid;
-			LOGE("[Hang_Detect] %s found pid:%d.\n", task->comm, task->pid);
+			//LOGE("[Hang_Detect] %s found pid:%d.\n", task->comm, task->pid);
 			/* return system_server_pid;  //for_each_process list by pid */
 		}
 	 }
@@ -270,7 +270,7 @@ static int FindTaskByName(char *name)
 	if (system_server_pid)
 		ret = system_server_pid;
 	else {
-		LOGE("[Hang_Detect] system_server not found!\n");
+		//LOGE("[Hang_Detect] system_server not found!\n");
 		ret = -1;
 	}
 	return ret;
@@ -284,7 +284,9 @@ void sched_show_task_local(struct task_struct *p)
 	char stat_nam[] = TASK_STATE_TO_CHAR_STR;
 
 	state = p->state ? __ffs(p->state) + 1 : 0;
-	LOGE("%-15.15s %c", p->comm, state < sizeof(stat_nam) - 1 ? stat_nam[state] : '?');
+	//LOGE("%-15.15s %c", p->comm, state < sizeof(stat_nam) - 1 ? stat_nam[state] : '?');
+
+#if 0
 #if BITS_PER_LONG == 32
 	if (state == TASK_RUNNING)
 		LOGE(" running  ");
@@ -296,14 +298,16 @@ void sched_show_task_local(struct task_struct *p)
 	else
 		LOGE(" %016lx ", thread_saved_pc(p));
 #endif
+#endif
+
 #ifdef CONFIG_DEBUG_STACK_USAGE
 	free = stack_not_used(p);
 #endif
 	rcu_read_lock();
 	ppid = task_pid_nr(rcu_dereference(p->real_parent));
 	rcu_read_unlock();
-	LOGE("%5lu %5d %6d 0x%08lx\n", free,
-			task_pid_nr(p), ppid, (unsigned long)task_thread_info(p)->flags);
+	//LOGE("%5lu %5d %6d 0x%08lx\n", free,
+	//		task_pid_nr(p), ppid, (unsigned long)task_thread_info(p)->flags);
 
 	print_worker_info("6", p);
 	show_stack(p, NULL);
@@ -313,10 +317,12 @@ void show_state_filter_local(unsigned long state_filter)
 {
 	struct task_struct *g, *p;
 
+#if 0
 #if BITS_PER_LONG == 32
 	LOGE("  task                PC stack   pid father\n");
 #else
 	LOGE("  task                        PC stack   pid father\n");
+#endif
 #endif
 	do_each_thread(g, p) {
 		/*
@@ -355,41 +361,41 @@ static void ShowStatus(void)
 
 	InDumpAllStack = 1;
 
-	LOGE("[Hang_Detect] dump system_ui all thread bt\n");
+	//LOGE("[Hang_Detect] dump system_ui all thread bt\n");
 	if (system_ui_pid)
 		show_bt_by_pid(system_ui_pid);
 
 	/* show all kbt in surfaceflinger */
-	LOGE("[Hang_Detect] dump surfaceflinger all thread bt\n");
+	//LOGE("[Hang_Detect] dump surfaceflinger all thread bt\n");
 	if (surfaceflinger_pid)
 		show_bt_by_pid(surfaceflinger_pid);
 
 	/* show all kbt in system_server */
-	LOGE("[Hang_Detect] dump system_server all thread bt\n");
+	//LOGE("[Hang_Detect] dump system_server all thread bt\n");
 	if (system_server_pid)
 		show_bt_by_pid(system_server_pid);
 
 	/* show all D state thread kbt */
-	LOGE("[Hang_Detect] dump all D thread bt\n");
+	//LOGE("[Hang_Detect] dump all D thread bt\n");
 		show_state_filter_local(TASK_UNINTERRUPTIBLE);
 
 	/* show all kbt in init */
-	LOGE("[Hang_Detect] dump init all thread bt\n");
+	//LOGE("[Hang_Detect] dump init all thread bt\n");
 	if (init_pid)
 		show_bt_by_pid(init_pid);
 
 	/* show all kbt in mmcqd/0 */
-	LOGE("[Hang_Detect] dump mmcqd/0 all thread bt\n");
+	//LOGE("[Hang_Detect] dump mmcqd/0 all thread bt\n");
 	if (mmcqd0)
 		show_bt_by_pid(mmcqd0);
 	/* show all kbt in mmcqd/1 */
-	LOGE("[Hang_Detect] dump mmcqd/1 all thread bt\n");
+	//LOGE("[Hang_Detect] dump mmcqd/1 all thread bt\n");
 	if (mmcqd1)
 		show_bt_by_pid(mmcqd1);
 
-	LOGE("[Hang_Detect] dump debug_show_all_locks\n");
+	//LOGE("[Hang_Detect] dump debug_show_all_locks\n");
 	debug_show_all_locks();
-	LOGE("[Hang_Detect] show_free_areas\n");
+	//LOGE("[Hang_Detect] show_free_areas\n");
 	show_free_areas(0);
 	system_server_pid = 0;
 	surfaceflinger_pid = 0;
@@ -409,19 +415,19 @@ static int hang_detect_thread(void *arg)
 	struct sched_param param = {
 		.sched_priority = 99 };
 
-	LOGE("[Hang_Detect] hang_detect thread starts.\n");
+	//LOGE("[Hang_Detect] hang_detect thread starts.\n");
 
 	sched_setscheduler(current, SCHED_FIFO, &param);
 
 	while (1) {
 		if ((1 == hd_detect_enabled) && (FindTaskByName("system_server") != -1)) {
-			LOGE("[Hang_Detect] hang_detect thread counts down %d:%d.\n", hang_detect_counter, hd_timeout);
+			//LOGE("[Hang_Detect] hang_detect thread counts down %d:%d.\n", hang_detect_counter, hd_timeout);
 
 			if (hang_detect_counter <= 0)
 				ShowStatus();
 
 			if (hang_detect_counter == 0) {
-				LOGE("[Hang_Detect] we should triger	HWT	...\n");
+				//LOGE("[Hang_Detect] we should triger	HWT	...\n");
 				if (aee_mode != AEE_MODE_CUSTOMER_USER) {
 					aee_kernel_warning_api
 						(__FILE__, __LINE__,
@@ -449,7 +455,7 @@ static int hang_detect_thread(void *arg)
 				hang_detect_counter = hd_timeout + 4;
 				hd_detect_enabled = 0;
 			}
-			LOGE("[Hang_Detect] hang_detect disabled.\n");
+			//LOGE("[Hang_Detect] hang_detect disabled.\n");
 		}
 
 		msleep((HD_INTER) * 1000);
@@ -469,7 +475,7 @@ void aee_kernel_RT_Monitor_api(int lParam)
 		hd_detect_enabled = 0;
 		hang_detect_counter =
 			hd_timeout;
-		LOGE("[Hang_Detect] hang_detect disabled\n");
+		//LOGE("[Hang_Detect] hang_detect disabled\n");
 	} else if (lParam > 0) {
 		/* lParem=0x1000|timeout,only set in aee call when NE in system_server
 		*  so only change hang_detect_counter when call from AEE
@@ -483,7 +489,7 @@ void aee_kernel_RT_Monitor_api(int lParam)
 			hang_detect_counter =
 				hd_timeout = ((long)lParam + HD_INTER - 1) / (HD_INTER);
 		}
-		LOGE("[Hang_Detect] hang_detect enabled %d\n", hd_timeout);
+		//LOGE("[Hang_Detect] hang_detect enabled %d\n", hd_timeout);
 	}
 }
 
@@ -498,7 +504,7 @@ static int hd_proc_cmd_read(char *buf,
 	/* with a read of the /proc/hang_detect, we reset the counter. */
 	int len = 0;
 
-	LOGE("[Hang_Detect] read proc	%d\n", count);
+	//LOGE("[Hang_Detect] read proc	%d\n", count);
 
 	len =
 		sprintf(buf, "%d:%d\n",
@@ -529,7 +535,7 @@ static int hd_proc_cmd_write(struct file
 	if (retval == 0)
 		LOGE("can not identify counter!\n");
 
-	LOGE("[Hang_Detect] write	proc %d, original %d: %d\n", counter, hang_detect_counter, hd_timeout);
+	//LOGE("[Hang_Detect] write	proc %d, original %d: %d\n", counter, hang_detect_counter, hd_timeout);
 
 	if (counter > 0) {
 		if (counter % HD_INTER != 0)
@@ -561,12 +567,12 @@ int hang_detect_init(void)
 
 	unsigned char *name = "hang_detect";
 
-	LOGD("[Hang_Detect] Initialize proc\n");
+	//LOGD("[Hang_Detect] Initialize proc\n");
 
 	/* de->read_proc = hd_proc_cmd_read; */
 	/* de->write_proc = hd_proc_cmd_write; */
 
-	LOGD("[Hang_Detect] create hang_detect thread\n");
+	//LOGD("[Hang_Detect] create hang_detect thread\n");
 
 	hd_thread =
 		kthread_create
@@ -598,8 +604,8 @@ void aee_kernel_wdt_kick_Powkey_api(const
 	spin_lock(&pwk_hang_lock);
 	wdt_kick_status |= msg;
 	spin_unlock(&pwk_hang_lock);
-	if (pwk_start_monitor)
-		LOGE("powerkey_kick:%s:%x,%x\r", module, msg, wdt_kick_status);
+	//if (pwk_start_monitor)
+	//	LOGE("powerkey_kick:%s:%x,%x\r", module, msg, wdt_kick_status);
 
 }
 EXPORT_SYMBOL
@@ -612,7 +618,7 @@ void aee_powerkey_notify_press(unsigned long
 		wdt_kick_status = 0;
 		hwt_kick_times = 0;
 		pwk_start_monitor = 1;
-		LOGE("(%s) HW keycode powerkey\n", pressed ? "pressed" : "released");
+		//LOGE("(%s) HW keycode powerkey\n", pressed ? "pressed" : "released");
 	}
 }
 EXPORT_SYMBOL(aee_powerkey_notify_press);
@@ -629,8 +635,8 @@ int aee_kernel_wdt_kick_api(int kinterval)
 			(FindTaskByName("system_server")
 			 != -1)) {
 		/* Only in normal_boot! */
-		LOGE("Press powerkey!!	g_boot_mode=%d,wdt_kick_status=0x%x,tickTimes=0x%x,g_kinterval=%d,RT[%lld]\n",
-				get_boot_mode(), wdt_kick_status, hwt_kick_times, kinterval, sched_clock());
+		//LOGE("Press powerkey!!	g_boot_mode=%d,wdt_kick_status=0x%x,tickTimes=0x%x,g_kinterval=%d,RT[%lld]\n",
+		//		get_boot_mode(), wdt_kick_status, hwt_kick_times, kinterval, sched_clock());
 		hwt_kick_times++;
 		if ((kinterval * hwt_kick_times > 180)) {	/* only monitor 3 min */
 			pwk_start_monitor =
@@ -665,9 +671,9 @@ int aee_kernel_wdt_kick_api(int kinterval)
 					 WDT_SETBY_SF)) ==
 				(WDT_SETBY_Display |
 				 WDT_SETBY_SF)) {
-			pwk_start_monitor =
+			pwk_start_monitor = 
 				0;
-			LOGE("[WDK] Powerkey Tick ok,kick_status 0x%08x,RT[%lld]\n ", wdt_kick_status, sched_clock());
+			//LOGE("[WDK] Powerkey Tick ok,kick_status 0x%08x,RT[%lld]\n ", wdt_kick_status, sched_clock());
 		}
 	}
 	return ret;

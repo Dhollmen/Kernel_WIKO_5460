@@ -114,8 +114,8 @@ static void aed_get_bt(struct task_struct *tsk, struct aee_process_bt *bt)
 	stack_address = ALIGN(frame.sp, THREAD_SIZE);
 	if ((stack_address >= (PAGE_OFFSET + THREAD_SIZE)) && virt_addr_valid(stack_address))
 		walk_stackframe(&frame, aed_save_trace, bt);
-	else
-		LOGD("%s: Invalid sp value %lx\n", __func__, frame.sp);
+	//else
+	//	LOGD("%s: Invalid sp value %lx\n", __func__, frame.sp);
 }
 
 static DEFINE_SEMAPHORE(process_bt_sem);
