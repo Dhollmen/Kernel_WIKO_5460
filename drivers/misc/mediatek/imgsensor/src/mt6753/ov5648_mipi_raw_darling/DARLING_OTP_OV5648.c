@@ -54,7 +54,7 @@ After finishing the OTP written, we will provide you the golden_rg and golden_bg
 
 #undef TRACE
 //#define TRACE(fmt, args...) printk(KERN_INFO "ov5648_OTP.c: " fmt, ## args)
-#define TRACE(fmt, arg...) printk("[OV5648MIPIRaw_OTP]%s: " fmt "\n", __FUNCTION__ ,##arg)//LINE <> <DATE20130923> <ov5648 OTP log> wupingzhou
+#define TRACE(fmt, arg...)  do {} while (0)
 
 
 extern kal_uint16 OV5648MIPI_read_cmos_sensor_darling(kal_uint32 addr);

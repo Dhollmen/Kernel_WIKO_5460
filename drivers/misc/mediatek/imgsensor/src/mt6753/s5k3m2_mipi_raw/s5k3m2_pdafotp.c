@@ -11,7 +11,7 @@
 
 #define PFX "S5K3M2_PDAFOTP"
 #define S5K3M_USE_WB_OTP
-#define LOG_INF(format, args...)	pr_debug("s5k3m2"   , PFX, "[%s] " format, __FUNCTION__, ##args)
+#define LOG_INF(format, args...)  do {} while (0)
 
 #include "kd_camera_typedef.h"
 

@@ -17,13 +17,13 @@
 ******************************************************************************/
 #define PFX "[kd_camera_hw]"
 #define PK_DBG_NONE(fmt, arg...)    do {} while (0)
-#define PK_DBG_FUNC(fmt, args...)    pr_debug(PFX  fmt, ##args)
+#define PK_DBG_FUNC(fmt, args...)   do {} while (0)
 
 #define DEBUG_CAMERA_HW_K
 #ifdef DEBUG_CAMERA_HW_K
-#define PK_DBG(fmt, args...) 		pr_err(PFX  fmt, ##args)
+#define PK_DBG(fmt, args...) 		do {} while (0)
 #define PK_ERR(fmt, arg...)         pr_err(fmt, ##arg)
-#define PK_XLOG_INFO(fmt, args...)  pr_debug(PFX  fmt, ##args);
+#define PK_XLOG_INFO(fmt, args...)  do {} while (0)
 #else
 #define PK_DBG(a, ...)
 #define PK_ERR(a, ...)

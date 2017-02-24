@@ -108,21 +108,18 @@ struct device *sensor_device = NULL;
 ******************************************************************************/
 #define PFX "[kd_sensorlist]"
 #define PK_DBG_NONE(fmt, arg...)    do {} while (0)
-#define PK_DBG_FUNC(fmt, arg...)    pr_debug(fmt, ##arg)
-#define PK_INF(fmt, args...)     pr_debug(PFX "[%s] " fmt, __func__, ##args)
+#define PK_DBG_FUNC(fmt, arg...)    do {} while (0)
+#define PK_INF(fmt, args...)        do {} while (0)
 
 #undef DEBUG_CAMERA_HW_K
 /* #define DEBUG_CAMERA_HW_K */
 #ifdef DEBUG_CAMERA_HW_K
 #define PK_DBG PK_DBG_FUNC
-#define PK_ERR(fmt, arg...)         pr_err(fmt, ##arg)
-#define PK_XLOG_INFO(fmt, args...) \
-	do {    \
-		pr_debug(fmt, ##args); \
-	} while (0)
+#define PK_ERR(fmt, arg...)         do {} while (0)
+#define PK_XLOG_INFO(fmt, args...)  do {} while (0)
 #else
 #define PK_DBG(a, ...)
-#define PK_ERR(fmt, arg...)             pr_err(fmt, ##arg)
+#define PK_ERR(fmt, arg...)         do {} while (0)
 #define PK_XLOG_INFO(fmt, args...)
 
 #endif

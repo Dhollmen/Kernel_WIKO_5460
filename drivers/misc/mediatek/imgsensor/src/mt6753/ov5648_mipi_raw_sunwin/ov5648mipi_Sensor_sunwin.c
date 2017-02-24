@@ -43,7 +43,7 @@
 /****************************   Modify end    *******************************************/
 extern signed char check_sunwin_MID(signed char index);
 extern bool otp_update_wb_sunwin(unsigned short golden_rg, unsigned short golden_bg);
-#define LOG_INF(format, args...)    pr_debug(PFX "[%s] " format, __FUNCTION__, ##args)
+#define LOG_INF(format, args...)    do {} while (0)
 
 static DEFINE_SPINLOCK(imgsensor_drv_lock);
 
