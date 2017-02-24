@@ -404,7 +404,7 @@ void print_oops_end_marker(void)
 		printk(KERN_WARNING "Board Information: %s\n",
 		       mach_panic_string);
 
-	pr_warn("---[ end trace %016llx ]---\n", (unsigned long long)oops_id);
+	//pr_warn("---[ end trace %016llx ]---\n", (unsigned long long)oops_id);
 }
 
 /*
@@ -429,7 +429,7 @@ static void warn_slowpath_common(const char *file, int line, void *caller,
 {
 	disable_trace_on_warning();
 
-	pr_warn("------------[ cut here ]------------\n");
+	//pr_warn("------------[ cut here ]------------\n");
 	pr_warn("WARNING: CPU: %d PID: %d at %s:%d %pS()\n",
 		raw_smp_processor_id(), current->pid, file, line, caller);
 
@@ -437,7 +437,7 @@ static void warn_slowpath_common(const char *file, int line, void *caller,
 		vprintk(args->fmt, args->args);
 
 	print_modules();
-	dump_stack();
+	//dump_stack();
 	print_oops_end_marker();
 	/* Just a warning, don't kill lockdep. */
 	add_taint(taint, LOCKDEP_STILL_OK);

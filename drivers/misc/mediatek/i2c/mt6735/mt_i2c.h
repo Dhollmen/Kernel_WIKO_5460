@@ -8,10 +8,10 @@
 
 #define I2CTAG			"[I2C]"
 /* #define pr_fmt(fmt)		"[I2C]"fmt */
-#define I2CLOG(fmt, arg...)	pr_err(fmt, ##arg)
-#define I2CMSG(fmt, arg...)	pr_debug(fmt, ##arg)
-#define I2CERR(fmt, arg...)	pr_err("ERROR,%d: "fmt, __LINE__, ##arg)
-#define I2CFUC(fmt, arg...)	pr_debug("%s\n", __func__)
+#define I2CLOG(fmt, arg...)	do {} while (0)
+#define I2CMSG(fmt, arg...)	do {} while (0)
+#define I2CERR(fmt, arg...)	do {} while (0)
+#define I2CFUC(fmt, arg...)	do {} while (0)
 
 #define I2C_DRV_NAME		"mt-i2c"
 #define I2C_NR			4

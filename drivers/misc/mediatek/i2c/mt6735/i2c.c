@@ -82,17 +82,8 @@ static struct mt_i2c_t *g_i2c[2];
 #define I2C_T_SPEED 3
 /*7 ports,16 types of message */
 u8 i2c_port[PORT_COUNT][MESSAGE_COUNT];
-#if 0
-#define I2CINFO(type, format, arg...) do { \
-	if (type < MESSAGE_COUNT && type >= 0) { \
-		if (i2c_port[i2c->id][0] != 0 && (i2c_port[i2c->id][type] != 0 || \
-			i2c_port[i2c->id][MESSAGE_COUNT - 1] != 0)) { \
-			I2CLOG(format, ## arg); \
-		} \
-	} \
-} while (0)
-#endif
-#define I2CINFO(type, format, arg...)	I2CLOG(format, ## arg)
+
+#define I2CINFO(type, format, arg...) do {} while (0)
 
 #ifdef I2C_DRIVER_IN_KERNEL
 static ssize_t show_config(struct device *dev, struct device_attribute *attr, char *buff)
