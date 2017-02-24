@@ -3671,13 +3671,13 @@ recheck:
 				policy != SCHED_FIFO && policy != SCHED_RR &&
 				policy != SCHED_NORMAL && policy != SCHED_BATCH &&
 				policy != SCHED_IDLE){
-			pr_warn("%s %d:%s policy %d", __func__, p->pid, p->comm, policy);
+			//pr_warn("%s %d:%s policy %d", __func__, p->pid, p->comm, policy);
 			return -EINVAL;
 		}
 	}
 
 	if (attr->sched_flags & ~(SCHED_FLAG_RESET_ON_FORK)) {
-		pr_warn("%s %d:%s sched_flags=%llu", __func__, p->pid, p->comm, attr->sched_flags);
+		//pr_warn("%s %d:%s sched_flags=%llu", __func__, p->pid, p->comm, attr->sched_flags);
 		return -EINVAL;
 	}
 
@@ -3688,13 +3688,13 @@ recheck:
 	 */
 	if ((p->mm && attr->sched_priority > MAX_USER_RT_PRIO-1) ||
 	    (!p->mm && attr->sched_priority > MAX_RT_PRIO-1)) {
-		pr_warn("%s %d:%s sched_priority=%d", __func__, p->pid, p->comm, attr->sched_priority);
+		//pr_warn("%s %d:%s sched_priority=%d", __func__, p->pid, p->comm, attr->sched_priority);
 		return -EINVAL;
 	}
 	if ((dl_policy(policy) && !__checkparam_dl(attr)) ||
 	    (rt_policy(policy) != (attr->sched_priority != 0))) {
-		pr_warn("%s %d:%s dl, rt sched_priority=%d",
-			__func__, p->pid, p->comm, attr->sched_priority);
+		//pr_warn("%s %d:%s dl, rt sched_priority=%d",
+		//	__func__, p->pid, p->comm, attr->sched_priority);
 		return -EINVAL;
 	}
 
@@ -3705,8 +3705,8 @@ recheck:
 		if (fair_policy(policy)) {
 			if (attr->sched_nice < task_nice(p) &&
 			    !can_nice(p, attr->sched_nice)) {
-				pr_warn("%s %d:%s sched_nice=%d",
-					__func__, p->pid, p->comm, attr->sched_nice);
+				//pr_warn("%s %d:%s sched_nice=%d",
+				//	__func__, p->pid, p->comm, attr->sched_nice);
 				return -EPERM;
 			}
 		}
@@ -3717,16 +3717,16 @@ recheck:
 
 			/* can't set/change the rt policy */
 			if (policy != p->policy && !rlim_rtprio) {
-				pr_warn("%s %d:%s policy=%d %d %lu",
-					__func__, p->pid, p->comm, policy,  p->policy, rlim_rtprio);
+				//pr_warn("%s %d:%s policy=%d %d %lu",
+				//	__func__, p->pid, p->comm, policy,  p->policy, rlim_rtprio);
 				return -EPERM;
 			}
 
 			/* can't increase priority */
 			if (attr->sched_priority > p->rt_priority &&
 			    attr->sched_priority > rlim_rtprio){
-				pr_warn("%s %d:%s policy=%d %d %lu", __func__, p->pid, p->comm,
-					attr->sched_priority, p->rt_priority, rlim_rtprio);
+				//pr_warn("%s %d:%s policy=%d %d %lu", __func__, p->pid, p->comm,
+				//	attr->sched_priority, p->rt_priority, rlim_rtprio);
 				return -EPERM;
 			}
 		}
@@ -3738,7 +3738,7 @@ recheck:
 		  * or reduce their runtime (both ways reducing utilization)
 		  */
 		if (dl_policy(policy)) {
-			pr_warn("%s %d:%s dl policy=%d", __func__, p->pid, p->comm, policy);
+			//pr_warn("%s %d:%s dl policy=%d", __func__, p->pid, p->comm, policy);
 			return -EPERM;
 		}
 
@@ -3748,21 +3748,21 @@ recheck:
 		 */
 		if (p->policy == SCHED_IDLE && policy != SCHED_IDLE) {
 			if (!can_nice(p, task_nice(p))) {
-				pr_warn("%s %d:%s dl policy=%d", __func__, p->pid, p->comm, policy);
+				//pr_warn("%s %d:%s dl policy=%d", __func__, p->pid, p->comm, policy);
 				return -EPERM;
 			}
 		}
 
 		/* can't change other user's priorities */
 		if (!check_same_owner(p)) {
-			pr_warn("%s %d:%s check_same_owner", __func__, p->pid, p->comm);
+			//pr_warn("%s %d:%s check_same_owner", __func__, p->pid, p->comm);
 			return -EPERM;
 		}
 
 		/* Normal users shall not reset the sched_reset_on_fork flag */
 		if (p->sched_reset_on_fork && !reset_on_fork) {
-			pr_warn("%s %d:%s reset_on_fork=%d %d",
-				__func__, p->pid, p->comm, p->sched_reset_on_fork, reset_on_fork);
+			//pr_warn("%s %d:%s reset_on_fork=%d %d",
+			//	__func__, p->pid, p->comm, p->sched_reset_on_fork, reset_on_fork);
 			return -EPERM;
 		}
 	}
@@ -3818,7 +3818,7 @@ change:
 				task_group(p)->rt_bandwidth.rt_runtime == 0 &&
 				!task_group_is_autogroup(task_group(p))) {
 			task_rq_unlock(rq, p, &flags);
-			pr_warn("%s rt_runtime", __func__);
+			//pr_warn("%s rt_runtime", __func__);
 			return -EPERM;
 		}
 #endif
@@ -3834,7 +3834,7 @@ change:
 			if (!cpumask_subset(span, &p->cpus_allowed) ||
 			    rq->rd->dl_bw.bw == 0) {
 				task_rq_unlock(rq, p, &flags);
-				pr_warn("%s allowed", __func__);
+				//pr_warn("%s allowed", __func__);
 				return -EPERM;
 			}
 		}
@@ -3855,7 +3855,7 @@ change:
 	 */
 	if ((dl_policy(policy) || dl_task(p)) && dl_overflow(p, policy, attr)) {
 		task_rq_unlock(rq, p, &flags);
-		pr_warn("%s deadline", __func__);
+		//pr_warn("%s deadline", __func__);
 		return -EBUSY;
 	}
 
@@ -4293,7 +4293,7 @@ long sched_setaffinity(pid_t pid, const struct cpumask *in_mask)
 	if (!p) {
 		rcu_read_unlock();
 		put_online_cpus();
-		pr_debug("SCHED: setaffinity find process %d fail\n", pid);
+		//pr_debug("SCHED: setaffinity find process %d fail\n", pid);
 		return -ESRCH;
 	}
 
@@ -4303,17 +4303,17 @@ long sched_setaffinity(pid_t pid, const struct cpumask *in_mask)
 
 	if (p->flags & PF_NO_SETAFFINITY) {
 		retval = -EINVAL;
-		pr_debug("SCHED: setaffinity flags PF_NO_SETAFFINITY fail\n");
+		//pr_debug("SCHED: setaffinity flags PF_NO_SETAFFINITY fail\n");
 		goto out_put_task;
 	}
 	if (!alloc_cpumask_var(&cpus_allowed, GFP_KERNEL)) {
 		retval = -ENOMEM;
-		pr_debug("SCHED: setaffinity allo_cpumask_var for cpus_allowed fail\n");
+		//pr_debug("SCHED: setaffinity allo_cpumask_var for cpus_allowed fail\n");
 		goto out_put_task;
 	}
 	if (!alloc_cpumask_var(&new_mask, GFP_KERNEL)) {
 		retval = -ENOMEM;
-		pr_debug("SCHED: setaffinity allo_cpumask_var for new_mask fail\n");
+		//pr_debug("SCHED: setaffinity allo_cpumask_var for new_mask fail\n");
 		goto out_free_cpus_allowed;
 	}
 	retval = -EPERM;
@@ -4321,7 +4321,7 @@ long sched_setaffinity(pid_t pid, const struct cpumask *in_mask)
 		rcu_read_lock();
 		if (!ns_capable(__task_cred(p)->user_ns, CAP_SYS_NICE)) {
 			rcu_read_unlock();
-			pr_debug("SCHED: setaffinity check_same_owner and task_ns_capable fail\n");
+			//pr_debug("SCHED: setaffinity check_same_owner and task_ns_capable fail\n");
 			goto out_free_new_mask;
 		}
 		rcu_read_unlock();
@@ -4329,7 +4329,7 @@ long sched_setaffinity(pid_t pid, const struct cpumask *in_mask)
 
 	retval = security_task_setscheduler(p);
 	if (retval) {
-		pr_debug("SCHED: setaffinity security_task_setscheduler fail, status: %d\n", retval);
+		//pr_debug("SCHED: setaffinity security_task_setscheduler fail, status: %d\n", retval);
 		goto out_free_new_mask;
 	}
 
@@ -4355,8 +4355,8 @@ long sched_setaffinity(pid_t pid, const struct cpumask *in_mask)
 #endif
 again:
 	retval = set_cpus_allowed_ptr(p, new_mask);
-	if (retval)
-		pr_debug("SCHED: set_cpus_allowed_ptr status %d\n", retval);
+	//if (retval)
+	//	pr_debug("SCHED: set_cpus_allowed_ptr status %d\n", retval);
 
 	if (!retval) {
 		cpuset_cpus_allowed(p, cpus_allowed);
@@ -4377,10 +4377,11 @@ out_free_cpus_allowed:
 out_put_task:
 	put_task_struct(p);
 	put_online_cpus();
-	if (retval)
-		pr_debug("SCHED: setaffinity status %d\n", retval);
+	//if (retval)
+	//	pr_debug("SCHED: setaffinity status %d\n", retval);
 #ifdef CONFIG_MT_SCHED_INTEROP
-	else
+	//else
+    if (!retval)
 		mt_sched_printf(sched_interop, "set affinity pid=%d comm=%s affinity=%ld",
 			p->pid, p->comm, p->cpus_allowed.bits[0]);
 #endif
@@ -4435,13 +4436,13 @@ long sched_getaffinity(pid_t pid, struct cpumask *mask)
 	retval = -ESRCH;
 	p = find_process_by_pid(pid);
 	if (!p) {
-		pr_debug("SCHED: getaffinity find process %d fail\n", pid);
+		//pr_debug("SCHED: getaffinity find process %d fail\n", pid);
 		goto out_unlock;
 	}
 
 	retval = security_task_getscheduler(p);
 	if (retval) {
-		pr_debug("SCHED: getaffinity security_task_getscheduler fail, status: %d\n", retval);
+		//pr_debug("SCHED: getaffinity security_task_getscheduler fail, status: %d\n", retval);
 		goto out_unlock;
 	}
 
@@ -4453,8 +4454,8 @@ out_unlock:
 	rcu_read_unlock();
 	put_online_cpus();
 
-	if (retval)
-		pr_debug("SCHED: getaffinity status %d\n", retval);
+	//if (retval)
+	//	pr_debug("SCHED: getaffinity status %d\n", retval);
 
 	return retval;
 }
