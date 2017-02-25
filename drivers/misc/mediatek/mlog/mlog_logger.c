@@ -108,8 +108,8 @@ static int mlog_buf_len = MLOG_BUF_LEN;
 static unsigned mlog_start;
 static unsigned mlog_end;
 
-static int min_adj = -16;
-static int max_adj = 16;
+static int min_adj = -1000;
+static int max_adj = 1000;
 static int limit_pid = -1;
 
 static struct timer_list mlog_timer;
@@ -562,7 +562,7 @@ static void mlog_procinfo(void)
 		if (ppid == 1)
 			goto unlock_continue;
 
-		if (oom_score_adj == -16) {
+		if (oom_score_adj == -1000) {
 			/* only keep system server */
 			if (__kuid_val(cred->uid) != AID_SYSTEM)
 				goto unlock_continue;

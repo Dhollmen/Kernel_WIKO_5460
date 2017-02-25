@@ -114,7 +114,7 @@ static long monitor_hang_ioctl(struct file *file, unsigned int cmd, unsigned lon
 	}
 	/* QHQ RT Monitor */
 	if (cmd == AEEIOCTL_RT_MON_Kick) {
-		LOGE("AEEIOCTL_RT_MON_Kick ( %d)\n", (int)arg);
+		//LOGE("AEEIOCTL_RT_MON_Kick ( %d)\n", (int)arg);
 		aee_kernel_RT_Monitor_api((int)arg);
 		return ret;
 	}
@@ -127,7 +127,7 @@ static long monitor_hang_ioctl(struct file *file, unsigned int cmd, unsigned lon
 	if (cmd == AEEIOCTL_SET_SF_STATE) {
 		if (copy_from_user(&monitor_status, (void __user *)arg, sizeof(long long)))
 			ret = -1;
-		LOGE("AEE_MONITOR_SET[status]: 0x%llx", monitor_status);
+		//LOGE("AEE_MONITOR_SET[status]: 0x%llx", monitor_status);
 		return ret;
 	} else if (cmd == AEEIOCTL_GET_SF_STATE) {
 		if (copy_to_user((void __user *)arg, &monitor_status, sizeof(long long)))
