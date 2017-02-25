@@ -409,7 +409,6 @@ static int mtk_pcm_dl1bt_copy(struct snd_pcm_substream *substream,
 		       Afe_Block->u4WriteIdx, Afe_Block->u4DMAReadIdx, Afe_Block->u4DataRemained);
 
 	if (Afe_Block->u4BufferSize == 0) {
-		pr_err("AudDrv_write: u4BufferSize=0 Error");
 		return 0;
 	}
 
@@ -469,10 +468,10 @@ static int mtk_pcm_dl1bt_copy(struct snd_pcm_substream *substream,
 
 			PRINTK_AUD_DL1("size_1=0x%x, size_2=0x%x\n", size_1, size_2);
 			if (!access_ok(VERIFY_READ, data_w_ptr, size_1)) {
-				pr_warn("AudDrv_write 1ptr invalid data_w_ptr=%p, size_1=%d",
-					data_w_ptr, size_1);
-				pr_warn("AudDrv_write u4BufferSize=%d, u4DataRemained=%d",
-					Afe_Block->u4BufferSize, Afe_Block->u4DataRemained);
+				//pr_warn("AudDrv_write 1ptr invalid data_w_ptr=%p, size_1=%d",
+				//	data_w_ptr, size_1);
+				//pr_warn("AudDrv_write u4BufferSize=%d, u4DataRemained=%d",
+				//	Afe_Block->u4BufferSize, Afe_Block->u4DataRemained);
 			} else {
 
 				PRINTK_AUD_DL1("mcmcpy WriteIdx= %p data_w_ptr = %p size_1 = %x\n",

@@ -397,14 +397,11 @@ static char mConnectionState[Soc_Aud_InterConnectionInput_Num_Input]
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},	/* I12 */
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},	/* I13 */
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},	/* I14 */
-	/* {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, // I15 */
-	/* {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}  // I16 */
 };
 
 static bool CheckBitsandReg(short regaddr, char bits)
 {
 	if (regaddr <= 0 || bits < 0) {
-		printk("regaddr = %x bits = %d\n", regaddr, bits);
 		return false;
 	}
 	return true;
@@ -412,15 +409,7 @@ static bool CheckBitsandReg(short regaddr, char bits)
 
 bool SetConnectionState(uint32 ConnectionState, uint32 Input, uint32 Output)
 {
-	/* printk("SetinputConnection ConnectionState = %d
-	Input = %d Output = %d\n", ConnectionState, Input, Output); */
-	if ((mConnectionTable[Input][Output]) < 0) {
-		pr_warn("no connection mpConnectionTable[%d][%d] = %d\n", Input, Output,
-		       mConnectionTable[Input][Output]);
-	} else if ((mConnectionTable[Input][Output]) == 0) {
-		pr_warn("test only !! mpConnectionTable[%d][%d] = %d\n", Input, Output,
-		       mConnectionTable[Input][Output]);
-	} else {
+	if ((mConnectionTable[Input][Output]) > 0) {
 		if (mConnectionTable[Input][Output]) {
 			int connectionBits = 0;
 			int connectReg = 0;
@@ -428,7 +417,6 @@ bool SetConnectionState(uint32 ConnectionState, uint32 Input, uint32 Output)
 			switch (ConnectionState) {
 			case Soc_Aud_InterCon_DisConnect:
 			{
-				/* printk("nConnectionState = %d\n", ConnectionState); */
 				if ((mConnectionState[Input][Output] &
 				     Soc_Aud_InterCon_Connection) ==
 				    Soc_Aud_InterCon_Connection) {
@@ -460,7 +448,6 @@ bool SetConnectionState(uint32 ConnectionState, uint32 Input, uint32 Output)
 			}
 			case Soc_Aud_InterCon_Connection:
 			{
-				/* printk("nConnectionState = %d\n", ConnectionState); */
 				/* here to disconnect connect shift bits */
 				connectionBits = mConnectionbits[Input][Output];
 				connectReg = mConnectionReg[Input][Output];
@@ -474,11 +461,9 @@ bool SetConnectionState(uint32 ConnectionState, uint32 Input, uint32 Output)
 			}
 			case Soc_Aud_InterCon_ConnectionShift:
 			{
-				/* printk("nConnectionState = %d\n", ConnectionState); */
 				if ((mConnectionTable[Input][Output] &
 				     Soc_Aud_InterCon_ConnectionShift) !=
 				    Soc_Aud_InterCon_ConnectionShift) {
-					pr_err("donn't support shift opeartion");
 					break;
 				}
 				connectionBits = mShiftConnectionbits[Input][Output];
@@ -492,7 +477,6 @@ bool SetConnectionState(uint32 ConnectionState, uint32 Input, uint32 Output)
 				break;
 			}
 			default:
-				pr_err("no this state ConnectionState = %d\n", ConnectionState);
 				break;
 			}
 		}

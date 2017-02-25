@@ -105,7 +105,6 @@ static struct snd_pcm_hardware mtk_pcm_dl2_hardware = {
 
 static int mtk_pcm_dl2_stop(struct snd_pcm_substream *substream)
 {
-	pr_warn("%s\n", __func__);
 	SetMemoryPathEnable(Soc_Aud_Digital_Block_MEM_DL2, false);
 
 	SetIrqMcuCounter(Soc_Aud_IRQ_MCU_MODE_IRQ1_MCU_MODE, 0);
@@ -186,8 +185,6 @@ static void SetDL2Buffer(struct snd_pcm_substream *substream, struct snd_pcm_hw_
 	pblock->u4DataRemained = 0;
 	pblock->u4fsyncflag = false;
 	pblock->uResetFlag = true;
-	pr_warn("SetDL2Buffer u4BufferSize = %d pucVirtBufAddr = %p pucPhysBufAddr = 0x%x\n",
-	       pblock->u4BufferSize, pblock->pucVirtBufAddr, pblock->pucPhysBufAddr);
 	/* set dram address top hardware */
 	Afe_Set_Reg(AFE_DL2_BASE, pblock->pucPhysBufAddr, 0xffffffff);
 	Afe_Set_Reg(AFE_DL2_END, pblock->pucPhysBufAddr + (pblock->u4BufferSize - 1), 0xffffffff);
@@ -243,8 +240,6 @@ static int mtk_pcm_dl2_open(struct snd_pcm_substream *substream)
 	if (mPlaybackSramState == SRAM_STATE_PLAYBACKDRAM)
 		AudDrv_Emi_Clk_On();
 
-	pr_warn("mtk_pcm_dl2_hardware.buffer_bytes_max = %zu mPlaybackSramState = %d\n",
-	       mtk_pcm_dl2_hardware.buffer_bytes_max, mPlaybackSramState);
 	runtime->hw = mtk_pcm_dl2_hardware;
 
 	AudDrv_Clk_On();
@@ -255,27 +250,15 @@ static int mtk_pcm_dl2_open(struct snd_pcm_substream *substream)
 	ret = snd_pcm_hw_constraint_list(runtime, 0, SNDRV_PCM_HW_PARAM_RATE,
 					 &constraints_sample_rates);
 
-	if (ret < 0)
-		pr_err("snd_pcm_hw_constraint_integer failed\n");
-
-	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
-		pr_warn("SNDRV_PCM_STREAM_PLAYBACK mtkalsa_dl2playback_constraints\n");
-	else
-		pr_warn("SNDRV_PCM_STREAM_CAPTURE mtkalsa_dl2playback_constraints\n");
-
 	if (ret < 0) {
-		pr_err("ret < 0 mtk_soc_pcm_dl2_close\n");
 		mtk_soc_pcm_dl2_close(substream);
 		return ret;
 	}
-	/* PRINTK_AUDDRV("mtk_pcm_dl2_open return\n"); */
 	return 0;
 }
 
 static int mtk_soc_pcm_dl2_close(struct snd_pcm_substream *substream)
 {
-	pr_warn("%s\n", __func__);
-
 	if (mPrepareDone == true) {
 		/* stop DAC output */
 		SetMemoryPathEnable(Soc_Aud_Digital_Block_I2S_OUT_DAC, false);
@@ -305,9 +288,6 @@ static int mtk_pcm_dl2_prepare(struct snd_pcm_substream *substream)
 	struct snd_pcm_runtime *runtime = substream->runtime;
 
 	if (mPrepareDone == false) {
-		pr_warn
-		    ("%s format = %d SNDRV_PCM_FORMAT_S32_LE = %d SNDRV_PCM_FORMAT_U32_LE = %d\n",
-		     __func__, runtime->format, SNDRV_PCM_FORMAT_S32_LE, SNDRV_PCM_FORMAT_U32_LE);
 		SetMemifSubStream(Soc_Aud_Digital_Block_MEM_DL2, substream);
 
 		if (runtime->format == SNDRV_PCM_FORMAT_S32_LE ||
@@ -358,9 +338,7 @@ static int mtk_pcm_dl2_start(struct snd_pcm_substream *substream)
 {
 	struct snd_pcm_runtime *runtime = substream->runtime;
 
-	pr_warn("%s\n", __func__);
 	/* here start digital part */
-
 	SetConnection(Soc_Aud_InterCon_Connection, Soc_Aud_InterConnectionInput_I07,
 		      Soc_Aud_InterConnectionOutput_O03);
 	SetConnection(Soc_Aud_InterCon_Connection, Soc_Aud_InterConnectionInput_I08,
@@ -421,7 +399,6 @@ static int mtk_pcm_dl2_copy(struct snd_pcm_substream *substream,
 		       Afe_Block->u4WriteIdx, Afe_Block->u4DMAReadIdx, Afe_Block->u4DataRemained);
 
 	if (Afe_Block->u4BufferSize == 0) {
-		pr_err("AudDrv_write: u4BufferSize=0 Error");
 		return 0;
 	}
 
@@ -490,12 +467,7 @@ static int mtk_pcm_dl2_copy(struct snd_pcm_substream *substream,
 #endif
 			PRINTK_AUD_DL2("size_1=0x%x, size_2=0x%x\n", size_1, size_2);
 			if (!access_ok(VERIFY_READ, data_w_ptr, size_1)) {
-				pr_err("AudDrv_write 1ptr invalid data_w_ptr=%p, size_1=%d",
-				       data_w_ptr, size_1);
-				pr_err("AudDrv_write u4BufferSize=%d, u4DataRemained=%d",
-				       Afe_Block->u4BufferSize, Afe_Block->u4DataRemained);
 			} else {
-
 				PRINTK_AUD_DL2
 				    ("mcmcpy Afe_Block->pucVirtBufAddr+Afe_WriteIdx= %p data_w_ptr = %p size_1 = %x\n",
 				     Afe_Block->pucVirtBufAddr + Afe_WriteIdx_tmp, data_w_ptr,
@@ -606,12 +578,8 @@ static int mtk_soc_dl2_probe(struct platform_device *pdev)
 	if (pdev->dev.of_node) {
 		dev_set_name(&pdev->dev, "%s", MT_SOC_DL2_PCM);
 	} else {
-		pr_err("%s invalid of_node\n", __func__);
 		return -ENODEV;
 	}
-
-	pr_warn("%s: dev name %s\n", __func__, dev_name(&pdev->dev));
-
 
 	return snd_soc_register_platform(&pdev->dev, &mtk_soc_platform);
 }

@@ -289,38 +289,16 @@ static void copysinewavetohdmi(unsigned int channels)
 	if (channels == 0) {
 		memset_io((void *)(Bufferaddr), 0x7f7f7f7f,
 		       Hhdmi_Buffer_length);  /* using for observe data */
-		pr_warn("use fix pattern Bufferaddr = %p Hhdmi_Buffer_length = %d\n", Bufferaddr,
-		       Hhdmi_Buffer_length);
 		return;
 	}
 
-	pr_warn("%s buffer area = %p arraybytes = %d bufferlength = %zu\n", __func__,
-	       HDMI_dma_buf->area , arraybytes, HDMI_dma_buf->bytes);
 	for (i = 0; i < HDMI_dma_buf->bytes; i += arraybytes) {
-		pr_warn("Bufferaddr + i = %p arraybytes = %d\n", Bufferaddr + i, arraybytes);
 		memcpy((void *)(Bufferaddr + i), (void *)SinewaveArr, arraybytes);
 	}
 
-	for (i = 0; i < 512; i++)
-		pr_warn("Bufferaddr[%d] = %x\n", i, *(Bufferaddr + i));
-
-
-}
-
-static void SetHDMIAddress(void)
-{
-#if 0
-	pr_warn("%s buffer length = %d\n", __func__,    HDMI_dma_buf->bytes);
-	Afe_Set_Reg(AFE_HDMI_BASE , HDMI_dma_buf->addr , 0xffffffff);
-	Afe_Set_Reg(AFE_HDMI_END  , HDMI_dma_buf->addr + (HDMI_dma_buf->bytes - 1),
-		    0xffffffff);
-#else
-	pr_warn("%s mt6572 not support!!!\n", __func__);
-#endif
 }
 
 #endif
-
 
 static int mHdmi_sidegen_control;
 static const char const *HDMI_SIDEGEN[] = {"Off", "On"};
@@ -332,7 +310,6 @@ static const struct soc_enum Audio_Hdmi_Enum[] = {
 static int Audio_hdmi_SideGen_Get(struct snd_kcontrol *kcontrol,
 				  struct snd_ctl_elem_value *ucontrol)
 {
-	pr_warn("Audio_hdmi_SideGen_Get = %d\n", mHdmi_sidegen_control);
 	ucontrol->value.integer.value[0] = mHdmi_sidegen_control;
 	return 0;
 }
@@ -340,9 +317,7 @@ static int Audio_hdmi_SideGen_Get(struct snd_kcontrol *kcontrol,
 static int Audio_hdmi_SideGen_Set(struct snd_kcontrol *kcontrol,
 				  struct snd_ctl_elem_value *ucontrol)
 {
-	pr_warn("%s()\n", __func__);
 	if (ucontrol->value.enumerated.item[0] > ARRAY_SIZE(HDMI_SIDEGEN)) {
-		pr_err("return -EINVAL\n");
 		return -EINVAL;
 	}
 
@@ -357,7 +332,6 @@ static int Audio_hdmi_SideGen_Set(struct snd_kcontrol *kcontrol,
 		uint32 MclkDiv = 0;
 
 		AudDrv_Clk_On();
-		SetHDMIAddress();
 		copysinewavetohdmi(8);
 
 		SetMemIfFetchFormatPerSample(Soc_Aud_Digital_Block_MEM_HDMI, AFE_WLEN_16_BIT);
@@ -468,8 +442,6 @@ static struct snd_soc_pcm_runtime *pruntimehdmi;
 static int mtk_pcm_hdmi_stop(struct snd_pcm_substream *substream)
 {
 	AFE_BLOCK_T *Afe_Block = &(pMemControl->rBlock);
-
-	pr_warn("mtk_pcm_hdmi_stop\n");
 
 	SetIrqEnable(Soc_Aud_IRQ_MCU_MODE_IRQ5_MCU_MODE, false);
 
@@ -887,25 +859,12 @@ static int mtk_pcm_hdmi_start(struct snd_pcm_substream *substream)
 	Afe_Set_Reg(AFE_I2S_CON, 1 << 2 ,  0x00000004); /* clock from : slave mode */
 	Afe_Set_Reg(AFE_I2S_CON, 1 << 3 ,  0x00000008); /* I2S mode */
 
-	/* Afe_Set_Reg(AFE_DAC_CON1, 4 << 8 ,  0x00000f00); // I2S sample rate //geo  temp force set 16khz */
-
 	SetSampleRate(Soc_Aud_Digital_Block_MEM_I2S,  runtime->rate);
 
 	Afe_Set_Reg(AFE_I2S_CON, 1, 0x00000001); /* I2S enable */
 	Afe_Set_Reg(AUDIO_TOP_CON1, 0 << 4, 0x00000010); /* clock none-gated */
 	Afe_Set_Reg(AUDIO_TOP_CON1, 0,  0x00000002);  /* I2S_SOFT_Reset  normal */
 
-	/* u32AudioI2S = SampleRateTransform(runtime->rate) << 8; */
-	/* u32AudioI2S |= Soc_Aud_I2S_FORMAT_I2S << 3; // us3 I2s format */
-	/* u32AudioI2S |= Soc_Aud_I2S_WLEN_WLEN_16BITS << 1; // 32 BITS */
-	/* u32AudioI2S |= Soc_Aud_NORMAL_CLOCK << 12 ; //Low jitter mode */
-	/* pr_warn(" u32AudioI2S= 0x%x\n", u32AudioI2S); */
-	/* Afe_Set_Reg(AFE_I2S_CON3, u32AudioI2S | 1, AFE_MASK_ALL); */
-
-#endif
-
-#if 0
-	copysinewavetohdmi(runtime->channels);
 #endif
 
 	/* here to set interrupt */
@@ -926,9 +885,6 @@ static int mtk_pcm_hdmi_start(struct snd_pcm_substream *substream)
 
 	u4tmpValue2 = Afe_Get_Reg(AFE_IRQ_DEBUG);
 	u4tmpValue2 &= 0x0003ffff;
-
-	pr_warn("AFE_IRQ_MCU_STATUS =0x%x IRQ_MCU_EN= 0x%x, IRQ_CNT5=0x%x, AFE_IRQ_DEBUG =0x%x\n",
-	       u4RegValue, u4tmpValue, u4tmpValue1, u4tmpValue2);
 
 	return 0;
 }
@@ -961,7 +917,6 @@ static int mtk_pcm_hdmi_copy(struct snd_pcm_substream *substream,
 
 	/* check which memif nned to be write */
 	Afe_Block = &(pMemControl->rBlock);
-
 
 	/* handle for buffer management */
 
@@ -1227,9 +1182,6 @@ static void __exit mtk_hdmi_soc_platform_exit(void)
 	platform_driver_unregister(&mtk_hdmi_driver);
 }
 module_exit(mtk_hdmi_soc_platform_exit);
-
-
-/* EXPORT_SYMBOL(Auddrv_Hdmi_Interrupt_Handler); */
 
 MODULE_DESCRIPTION("AFE PCM module platform driver");
 MODULE_LICENSE("GPL");

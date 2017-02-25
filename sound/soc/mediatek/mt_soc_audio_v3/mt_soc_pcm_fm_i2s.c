@@ -74,7 +74,6 @@ static bool mPrepareDone;
 static int Audio_fm_i2s_Volume_Get(struct snd_kcontrol *kcontrol,
 				   struct snd_ctl_elem_value *ucontrol)
 {
-	pr_warn("Audio_AmpR_Get = %d\n", mfm_i2s_Volume);
 	ucontrol->value.integer.value[0] = mfm_i2s_Volume;
 	return 0;
 
@@ -84,7 +83,6 @@ static int Audio_fm_i2s_Volume_Set(struct snd_kcontrol *kcontrol,
 				   struct snd_ctl_elem_value *ucontrol)
 {
 	mfm_i2s_Volume = ucontrol->value.integer.value[0];
-	pr_warn("%s mfm_i2s_Volume = 0x%x\n", __func__, mfm_i2s_Volume);
 
 	if (GetMemoryPathEnable(Soc_Aud_Digital_Block_I2S_IN_2) == true)
 		SetHwDigitalGain(mfm_i2s_Volume, Soc_Aud_Hw_Digital_Gain_HW_DIGITAL_GAIN1);
@@ -102,23 +100,12 @@ static const struct soc_enum wcn_stub_audio_ctr_Enum[] = {
 
 /* static int mAudio_Wcn_Cmb = CMB_STUB_AIF_3;//temp mark for early porting */
 static int Audio_Wcn_Cmb_Get(struct snd_kcontrol *kcontrol,
-			     struct snd_ctl_elem_value *ucontrol)
-{
-#if 0/* temp mark for early porting */
-	pr_warn("Audio_Wcn_Cmb_Get = %d\n", mAudio_Wcn_Cmb);
-	ucontrol->value.integer.value[0] = mAudio_Wcn_Cmb;
-#endif
+			     struct snd_ctl_elem_value *ucontrol) {
 	return 0;
 }
 
 static int Audio_Wcn_Cmb_Set(struct snd_kcontrol *kcontrol,
-			     struct snd_ctl_elem_value *ucontrol)
-{
-#if 0/* temp mark for early porting */
-	mAudio_Wcn_Cmb = ucontrol->value.integer.value[0];
-	pr_warn("%s mAudio_Wcn_Cmb = 0x%x\n", __func__, mAudio_Wcn_Cmb);
-	/* mtk_wcn_cmb_stub_audio_ctrl((CMB_STUB_AIF_X)mAudio_Wcn_Cmb);//temp mark for early porting */
-#endif
+			     struct snd_ctl_elem_value *ucontrol) {
 	return 0;
 }
 
@@ -147,9 +134,7 @@ static struct snd_pcm_hardware mtk_fm_i2s_hardware = {
 	.fifo_size =        0,
 };
 
-static int mtk_pcm_fm_i2s_stop(struct snd_pcm_substream *substream)
-{
-	/*pr_warn("mtk_pcm_fm_i2s_stop\n");*/
+static int mtk_pcm_fm_i2s_stop(struct snd_pcm_substream *substream) {
 	return 0;
 }
 
@@ -168,14 +153,11 @@ static int mtk_pcm_fm_i2s_hw_params(struct snd_pcm_substream *substream,
 				    struct snd_pcm_hw_params *hw_params)
 {
 	int ret = 0;
-
-	/*pr_warn("mtk_pcm_fm_i2s_hw_params\n");*/
 	return ret;
 }
 
 static int mtk_pcm_fm_i2s_hw_free(struct snd_pcm_substream *substream)
 {
-	pr_warn("mtk_pcm_fm_i2s_hw_free\n");
 	return snd_pcm_lib_free_pages(substream);
 }
 
@@ -194,7 +176,6 @@ static int mtk_pcm_fm_i2s_open(struct snd_pcm_substream *substream)
 	AudDrv_Clk_On();
 	AudDrv_I2S_Clk_On();
 
-	/*pr_warn("mtk_pcm_fm_i2s_open\n");*/
 	runtime->hw = mtk_fm_i2s_hardware;
 	memcpy((void *)(&(runtime->hw)), (void *)&mtk_fm_i2s_hardware ,
 	       sizeof(struct snd_pcm_hardware));
@@ -202,34 +183,17 @@ static int mtk_pcm_fm_i2s_open(struct snd_pcm_substream *substream)
 	ret = snd_pcm_hw_constraint_list(runtime, 0, SNDRV_PCM_HW_PARAM_RATE,
 					 &fm_i2s_constraints_sample_rates);
 	ret = snd_pcm_hw_constraint_integer(runtime, SNDRV_PCM_HW_PARAM_PERIODS);
-	if (ret < 0)
-		pr_warn("snd_pcm_hw_constraint_integer failed\n");
-	pr_warn("mtk_pcm_fm_i2s_open runtime rate = %d channels = %d substream->pcm->device = %d\n",
-	       runtime->rate, runtime->channels, substream->pcm->device);
-
-	/*if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
-		pr_warn("SNDRV_PCM_STREAM_PLAYBACK mtkalsa_fm_i2s_playback_constraints\n");*/
-
-
 	if (ret < 0) {
-		pr_err("mtk_pcm_fm_i2s_close\n");
 		mtk_pcm_fm_i2s_close(substream);
 		return ret;
 	}
 
 	SetFMEnableFlag(true);
-	/*pr_warn("mtk_pcm_fm_i2s_open return\n");*/
 	return 0;
 }
 
 static int mtk_pcm_fm_i2s_close(struct snd_pcm_substream *substream)
 {
-	struct snd_pcm_runtime *runtime = substream->runtime;
-
-	pr_warn("%s rate = %d\n", __func__, runtime->rate);
-
-	/* mtk_wcn_cmb_stub_audio_ctrl((CMB_STUB_AIF_X)CMB_STUB_AIF_0);//temp mark for early porting */
-
 	SetMemoryPathEnable(Soc_Aud_Digital_Block_I2S_IN_2, false);
 	if (GetMemoryPathEnable(Soc_Aud_Digital_Block_I2S_IN_2) == false) {
 		SetI2SASRCEnable(false);
@@ -267,11 +231,7 @@ static int mtk_pcm_fm_i2s_prepare(struct snd_pcm_substream *substream)
 	AudioDigtalI2S m2ndI2SInAttribute;
 	struct snd_pcm_runtime *runtime = substream->runtime;
 
-	pr_warn("%s rate = %d\n", __func__, runtime->rate);
-
 	if (mPrepareDone == false) {
-		/* mtk_wcn_cmb_stub_audio_ctrl((CMB_STUB_AIF_X)CMB_STUB_AIF_3);//temp mark for early porting */
-
 		/* interconnection setting */
 		SetConnection(Soc_Aud_InterCon_Connection, Soc_Aud_InterConnectionInput_I00,
 			      Soc_Aud_InterConnectionOutput_O13);
@@ -329,14 +289,11 @@ static int mtk_pcm_fm_i2s_prepare(struct snd_pcm_substream *substream)
 
 static int mtk_pcm_fm_i2s_start(struct snd_pcm_substream *substream)
 {
-	/*pr_warn("%s\n", __func__);*/
 	return 0;
 }
 
 static int mtk_pcm_fm_i2s_trigger(struct snd_pcm_substream *substream, int cmd)
 {
-	/*pr_warn("mtk_pcm_fm_i2s_trigger cmd = %d\n", cmd);*/
-
 	switch (cmd) {
 	case SNDRV_PCM_TRIGGER_START:
 	case SNDRV_PCM_TRIGGER_RESUME:
@@ -358,9 +315,8 @@ static int mtk_pcm_fm_i2s_copy(struct snd_pcm_substream *substream,
 
 static int mtk_pcm_fm_i2s_silence(struct snd_pcm_substream *substream,
 				  int channel, snd_pcm_uframes_t pos,
-				  snd_pcm_uframes_t count)
+				  snd_pcm_uframes_t count) 
 {
-	pr_warn("%s\n", __func__);
 	return 0; /* do nothing */
 }
 
@@ -369,7 +325,6 @@ static void *dummy_page[2];
 static struct page *mtk_fm_i2s_pcm_page(struct snd_pcm_substream *substream,
 					unsigned long offset)
 {
-	pr_warn("%s\n", __func__);
 	return virt_to_page(dummy_page[substream->stream]); /* the same page */
 }
 
@@ -395,11 +350,9 @@ static struct snd_soc_platform_driver mtk_fm_i2s_soc_platform = {
 
 static int mtk_fm_i2s_probe(struct platform_device *pdev)
 {
-	pr_warn("%s\n", __func__);
 	if (pdev->dev.of_node)
 		dev_set_name(&pdev->dev, "%s", MT_SOC_FM_I2S_PCM);
 
-	pr_warn("%s: dev name %s\n", __func__, dev_name(&pdev->dev));
 	return snd_soc_register_platform(&pdev->dev,
 					 &mtk_fm_i2s_soc_platform);
 }
@@ -408,14 +361,12 @@ static int mtk_asoc_pcm_fm_i2s_new(struct snd_soc_pcm_runtime *rtd)
 {
 	int ret = 0;
 
-	pr_warn("%s\n", __func__);
 	return ret;
 }
 
 
 static int mtk_afe_fm_i2s_probe(struct snd_soc_platform *platform)
 {
-	pr_warn("mtk_afe_fm_i2s_probe\n");
 	snd_soc_add_platform_controls(platform, Audio_snd_fm_i2s_controls,
 				      ARRAY_SIZE(Audio_snd_fm_i2s_controls));
 	return 0;
@@ -423,7 +374,6 @@ static int mtk_afe_fm_i2s_probe(struct snd_soc_platform *platform)
 
 static int mtk_fm_i2s_remove(struct platform_device *pdev)
 {
-	pr_warn("%s\n", __func__);
 	snd_soc_unregister_platform(&pdev->dev);
 	return 0;
 }
@@ -455,7 +405,6 @@ static int __init mtk_fm_i2s_soc_platform_init(void)
 {
 	int ret = 0;
 
-	pr_warn("%s\n", __func__);
 #ifndef CONFIG_OF
 	soc_mtkfm_i2s_dev = platform_device_alloc(MT_SOC_FM_I2S_PCM, -1);
 	if (!soc_mtkfm_i2s_dev)
@@ -474,8 +423,6 @@ module_init(mtk_fm_i2s_soc_platform_init);
 
 static void __exit mtk_fm_i2s_soc_platform_exit(void)
 {
-	pr_warn("%s\n", __func__);
-
 	platform_driver_unregister(&mtk_fm_i2s_driver);
 }
 module_exit(mtk_fm_i2s_soc_platform_exit);

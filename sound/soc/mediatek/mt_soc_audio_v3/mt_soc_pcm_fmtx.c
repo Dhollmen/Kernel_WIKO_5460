@@ -92,7 +92,6 @@ static const struct soc_enum Audio_fmtx_Enum[] = {
 static int Audio_fmtx_hdoutput_Get(struct snd_kcontrol *kcontrol,
 				   struct snd_ctl_elem_value *ucontrol)
 {
-	pr_warn("Audio_AmpR_Get = %d\n", fmtx_hdoutput_control);
 	ucontrol->value.integer.value[0] = fmtx_hdoutput_control;
 	return 0;
 }
@@ -100,9 +99,7 @@ static int Audio_fmtx_hdoutput_Get(struct snd_kcontrol *kcontrol,
 static int Audio_fmtx_hdoutput_Set(struct snd_kcontrol *kcontrol,
 				   struct snd_ctl_elem_value *ucontrol)
 {
-	pr_warn("%s()\n", __func__);
 	if (ucontrol->value.enumerated.item[0] > ARRAY_SIZE(fmtx_HD_output)) {
-		pr_warn("return -EINVAL\n");
 		return -EINVAL;
 	}
 	fmtx_hdoutput_control = ucontrol->value.integer.value[0];
@@ -245,8 +242,6 @@ static void SetFMTXBuffer(struct snd_pcm_substream *substream,
 	pblock->u4DataRemained  = 0;
 	pblock->u4fsyncflag     = false;
 	pblock->uResetFlag      = true;
-	pr_warn("SetFMTXBuffer u4BufferSize = %d pucVirtBufAddr = %p pucPhysBufAddr = 0x%x\n",
-	       pblock->u4BufferSize, pblock->pucVirtBufAddr, pblock->pucPhysBufAddr);
 	/* set dram address top hardware */
 	Afe_Set_Reg(AFE_DL1_BASE , pblock->pucPhysBufAddr , 0xffffffff);
 	Afe_Set_Reg(AFE_DL1_END  , pblock->pucPhysBufAddr + (pblock->u4BufferSize - 1),
@@ -273,10 +268,6 @@ static int mtk_pcm_fmtx_hw_params(struct snd_pcm_substream *substream,
 		substream->runtime->dma_addr = FMTX_Playback_dma_buf->addr;
 		SetFMTXBuffer(substream, hw_params);
 	}
-	/* ------------------------------------------------------- */
-	pr_warn("1 dma_bytes = %zu dma_area = %p dma_addr = 0x%lx\n",
-	       substream->runtime->dma_bytes, substream->runtime->dma_area,
-	       (long)substream->runtime->dma_addr);
 
 	return ret;
 }
@@ -315,8 +306,6 @@ static int mtk_pcm_fmtx_open(struct snd_pcm_substream *substream)
 	if (mPlaybackSramState == SRAM_STATE_PLAYBACKDRAM)
 		AudDrv_Emi_Clk_On();
 
-	pr_warn("mtk_I2S0dl1_hardware.buffer_bytes_max = %zu mPlaybackSramState = %d\n",
-	       mtk_fmtx_hardware.buffer_bytes_max, mPlaybackSramState);
 	runtime->hw = mtk_fmtx_hardware;
 
 	AudDrv_Clk_On();
@@ -327,24 +316,12 @@ static int mtk_pcm_fmtx_open(struct snd_pcm_substream *substream)
 	ret = snd_pcm_hw_constraint_list(runtime, 0, SNDRV_PCM_HW_PARAM_RATE,
 					 &constraints_fmtx_sample_rates);
 
-	if (ret < 0)
-		pr_warn("snd_pcm_hw_constraint_integer failed\n");
-
-	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
-		pr_warn("SNDRV_PCM_STREAM_PLAYBACK mtkalsa_fmtx_playback_constraints\n");
-	else
-		pr_warn("SNDRV_PCM_STREAM_CAPTURE mtkalsa_fmtx_playback_constraints\n");
-
 	if (ret < 0) {
-		pr_err("ret < 0 mtkalsa_fmtx_playback close\n");
 		mtk_pcm_fmtx_close(substream);
 		return ret;
 	}
-	/* pr_warn("mtk_pcm_I2S0dl1_open return\n"); */
 	return 0;
 }
-
-
 
 static int mtk_pcm_fmtx_close(struct snd_pcm_substream *substream)
 {
@@ -429,7 +406,6 @@ static int mtk_pcm_fmtx_start(struct snd_pcm_substream *substream)
 
 static int mtk_pcm_fmtx_trigger(struct snd_pcm_substream *substream, int cmd)
 {
-	pr_warn("mtk_pcm_fmtx_trigger cmd = %d\n", cmd);
 	switch (cmd) {
 	case SNDRV_PCM_TRIGGER_START:
 	case SNDRV_PCM_TRIGGER_RESUME:
@@ -464,7 +440,6 @@ static int mtk_pcm_fmtx_copy(struct snd_pcm_substream *substream,
 			Afe_Block->u4WriteIdx, Afe_Block->u4DMAReadIdx, Afe_Block->u4DataRemained);
 
 	if (Afe_Block->u4BufferSize == 0) {
-		pr_err("AudDrv_write: u4BufferSize=0 Error");
 		return 0;
 	}
 
@@ -523,12 +498,7 @@ static int mtk_pcm_fmtx_copy(struct snd_pcm_substream *substream,
 
 			PRINTK_AUD_DL1("size_1=0x%x, size_2=0x%x\n", size_1, size_2);
 			if (!access_ok(VERIFY_READ, data_w_ptr, size_1)) {
-				pr_warn("[mtk_pcm_fmtx_copy] 1ptr invalid data_w_ptr=%p, size_1=%d", data_w_ptr,
-				       size_1);
-				pr_warn("[mtk_pcm_fmtx_copy] u4BufferSize=%d, u4DataRemained=%d",
-				       Afe_Block->u4BufferSize, Afe_Block->u4DataRemained);
 			} else {
-
 				PRINTK_AUD_FMTX("[%s]mcmcpy dx= %x data_w_ptr = %p size_1 = %x\n",
 						__func__,
 						Afe_Block->pucVirtBufAddr + Afe_WriteIdx_tmp, data_w_ptr, size_1);
@@ -551,7 +521,6 @@ static int mtk_pcm_fmtx_copy(struct snd_pcm_substream *substream,
 				PRINTK_AUD_FMTX("[mtk_pcm_fmtx_copy] u4BufferSize=%d, u4DataRemained=%d",
 						Afe_Block->u4BufferSize, Afe_Block->u4DataRemained);
 			} else {
-
 				PRINTK_AUD_FMTX("[%s]mcmcpy Idx= %x data_w_ptr+size_1 = %p size_2 = %x\n",
 						__func__, Afe_Block->pucVirtBufAddr + Afe_WriteIdx_tmp,
 						data_w_ptr + size_1, size_2);
@@ -617,7 +586,6 @@ static struct snd_soc_platform_driver mtk_fmtx_soc_platform = {
 
 static int mtk_fmtx_probe(struct platform_device *pdev)
 {
-	/* int ret = 0; */
 	PRINTK_AUD_FMTX("%s\n", __func__);
 
 	pdev->dev.coherent_dma_mask = DMA_BIT_MASK(64);

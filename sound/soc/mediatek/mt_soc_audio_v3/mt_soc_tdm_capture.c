@@ -80,15 +80,7 @@
 #include <asm/uaccess.h>
 #include <asm/irq.h>
 #include <asm/io.h>
-/*#include <mach/mt_reg_base.h>*/
 #include <asm/div64.h>
-/*
-#include <linux/aee.h>
-#include <mach/pmic_mt6325_sw.h>
-#include <mach/upmu_common.h>
-#include <mach/upmu_hw.h>
-#include <mach/mt_gpio.h>
-*/
 #include <mt-plat/aee.h>
 #include <mt-plat/upmu_common.h>
 
@@ -102,7 +94,6 @@
 #include <sound/soc-dapm.h>
 #include <sound/pcm.h>
 #include <sound/jack.h>
-/* #include <asm/mach-types.h> */
 
 /* information about */
 AFE_MEM_CONTROL_T  *TDM_VUL_Control_context;
@@ -216,17 +207,6 @@ static void StartAudioCaptureHardware(struct snd_pcm_substream *substream)
 
 	SetSampleRate(Soc_Aud_Digital_Block_MEM_VUL, substream->runtime->rate);
 	SetMemoryPathEnable(Soc_Aud_Digital_Block_MEM_VUL, true);
-#if 0
-	SetConnection(Soc_Aud_InterCon_Connection, Soc_Aud_InterConnectionInput_I03,
-		      Soc_Aud_InterConnectionOutput_O09);
-	SetConnection(Soc_Aud_InterCon_Connection, Soc_Aud_InterConnectionInput_I04,
-		      Soc_Aud_InterConnectionOutput_O10);
-
-	SetConnection(Soc_Aud_InterCon_Connection, Soc_Aud_InterConnectionInput_I03,
-		      Soc_Aud_InterConnectionOutput_O10);
-	SetConnection(Soc_Aud_InterCon_Connection, Soc_Aud_InterConnectionInput_I04,
-		      Soc_Aud_InterConnectionOutput_O09);
-#endif
 	SetConnection(Soc_Aud_InterCon_Connection, Soc_Aud_InterConnectionInput_I00,
 		      Soc_Aud_InterConnectionOutput_O09);
 	SetConnection(Soc_Aud_InterCon_Connection, Soc_Aud_InterConnectionInput_I01,
@@ -389,8 +369,6 @@ static int mtk_capture_pcm_open(struct snd_pcm_substream *substream)
 	ret = snd_pcm_hw_constraint_list(runtime, 0, SNDRV_PCM_HW_PARAM_RATE,
 					 &constraints_sample_rates);
 	ret = snd_pcm_hw_constraint_integer(runtime, SNDRV_PCM_HW_PARAM_PERIODS);
-	if (ret < 0)
-		pr_err("snd_pcm_hw_constraint_integer failed\n");
 
 	pr_debug("mtk_capture_pcm_open runtime rate = %d channels = %d\n", runtime->rate,
 	       runtime->channels);
@@ -402,7 +380,6 @@ static int mtk_capture_pcm_open(struct snd_pcm_substream *substream)
 		pr_debug("SNDRV_PCM_STREAM_CAPTURE mtkalsa_capture_constraints\n");
 
 	if (ret < 0) {
-		pr_err("mtk_capture_pcm_close\n");
 		mtk_capture_pcm_close(substream);
 		return ret;
 	}
@@ -443,7 +420,6 @@ static int mtk_capture_pcm_trigger(struct snd_pcm_substream *substream, int cmd)
 static bool CheckNullPointer(void *pointer)
 {
 	if (pointer == NULL) {
-		pr_err("CheckNullPointer pointer = NULL");
 		return true;
 	}
 	return false;
@@ -468,19 +444,16 @@ static int mtk_capture_pcm_copy(struct snd_pcm_substream *substream,
 	Vul_Block = &(pVUL_MEM_ConTrol->rBlock);
 
 	if (pVUL_MEM_ConTrol == NULL) {
-		pr_err("cannot find MEM control !!!!!!!\n");
 		msleep(50);
 		return 0;
 	}
 
 	if (Vul_Block->u4BufferSize <= 0) {
 		msleep(50);
-		pr_err("Vul_Block->u4BufferSize <= 0  =%d\n", Vul_Block->u4BufferSize);
 		return 0;
 	}
 
 	if (CheckNullPointer((void *)Vul_Block->pucVirtBufAddr)) {
-		pr_err("CheckNullPointer  pucVirtBufAddr = %p\n", Vul_Block->pucVirtBufAddr);
 		return 0;
 	}
 
@@ -505,12 +478,6 @@ static int mtk_capture_pcm_copy(struct snd_pcm_substream *substream,
 		       Vul_Block->u4DMAReadIdx, Vul_Block->u4WriteIdx);
 
 	if (DMA_Read_Ptr + read_size < Vul_Block->u4BufferSize) {
-		if (DMA_Read_Ptr != Vul_Block->u4DMAReadIdx) {
-			pr_err("%s 1, size:%zu, Remained:%x, Read_Ptr:%zu, ReadIdx:%x \r\n",
-			       __func__, read_size, Vul_Block->u4DataRemained,
-			       DMA_Read_Ptr, Vul_Block->u4DMAReadIdx);
-		}
-
 		if (copy_to_user((void __user *)Read_Data_Ptr,
 				 (Vul_Block->pucVirtBufAddr + DMA_Read_Ptr), read_size)) {
 
@@ -670,20 +637,6 @@ static int mtk_afe_capture_probe(struct snd_soc_platform *platform)
 	AudDrv_Allocate_mem_Buffer(platform->dev, Soc_Aud_Digital_Block_MEM_VUL,
 				   UL1_MAX_BUFFER_SIZE);
 	Capture_dma_buf =  Get_Mem_Buffer(Soc_Aud_Digital_Block_MEM_VUL);
-	/*
-	Capture_dma_buf = kmalloc(sizeof(struct snd_dma_buffer), GFP_KERNEL);
-	memset_io((void *)Capture_dma_buf, 0, sizeof(struct snd_dma_buffer));
-	pr_debug("mtk_afe_capture_probe dma_alloc_coherent\n");
-
-	Capture_dma_buf->area = dma_alloc_coherent(platform->dev,
-						   UL1_MAX_BUFFER_SIZE,
-						   &Capture_dma_buf->addr, GFP_KERNEL);
-
-	if (Capture_dma_buf->area)
-	{
-	    Capture_dma_buf->bytes = UL1_MAX_BUFFER_SIZE;
-	}
-	*/
 	mAudioDigitalI2S =  kzalloc(sizeof(AudioDigtalI2S), GFP_KERNEL);
 	return 0;
 }
@@ -742,7 +695,6 @@ module_init(mtk_soc_capture_platform_init);
 
 static void __exit mtk_soc_platform_exit(void)
 {
-
 	pr_debug("%s\n", __func__);
 	platform_driver_unregister(&mtk_afe_capture_driver);
 }
