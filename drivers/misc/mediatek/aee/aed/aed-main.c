@@ -1539,6 +1539,7 @@ static long aed_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 	return ret;
 }
 
+#ifdef CONFIG_STACKTRACE
 static void aed_get_traces(char *msg)
 {
 	struct stack_trace trace;
@@ -1558,6 +1559,7 @@ static void aed_get_traces(char *msg)
 				   (void *)trace.entries[i], (void *)trace.entries[i]);
 	}
 }
+#endif
 
 void Log2Buffer(struct aee_oops *oops, const char *fmt, ...)
 {
@@ -1763,14 +1765,15 @@ static void kernel_reportAPI(const AE_DEFECT_ATTR attr, const int db_opt, const 
 {
 	struct aee_oops *oops;
 	int n = 0;
-
+#ifdef CONFIG_STACKTRACE
 	if (aee_mode == AEE_MODE_CUSTOMER_USER || (aee_mode == AEE_MODE_CUSTOMER_ENG && attr == AE_DEFECT_WARNING))
 		return;
 	oops = aee_oops_create(attr, AE_KERNEL_PROBLEM_REPORT, module);
 	if (NULL != oops) {
 		n += snprintf(oops->backtrace, AEE_BACKTRACE_LENGTH, msg);
 		snprintf(oops->backtrace + n, AEE_BACKTRACE_LENGTH - n, "\nBacktrace:\n");
-		aed_get_traces(oops->backtrace);
+
+        aed_get_traces(oops->backtrace);
 		oops->detail = (char *)(oops->backtrace);
 		oops->detail_len = strlen(oops->backtrace) + 1;
 		oops->dump_option = db_opt;
@@ -1801,6 +1804,7 @@ static void kernel_reportAPI(const AE_DEFECT_ATTR attr, const int db_opt, const 
 		//LOGI("%s,%s,%s,0x%x\n", __func__, module, msg, db_opt);
 		ke_queue_request(oops);
 	}
+#endif
 }
 
 #ifndef PARTIAL_BUILD
