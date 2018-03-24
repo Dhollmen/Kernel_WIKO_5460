@@ -1086,18 +1086,18 @@ static int mtk_uart_vfifo_create(struct mtk_uart *uart)
 	struct mtk_uart_vfifo *vfifo;
 	int idx, err = 0;
 
-	MSG_FUNC_ENTRY();
+	//MSG_FUNC_ENTRY();
 
 	if (!uart->setting->vff) {
-		MSG_RAW("[UART%2d] not support VFF, Cancel alloc\n", uart->nport);
+		//MSG_RAW("[UART%2d] not support VFF, Cancel alloc\n", uart->nport);
 		return err;
 	}
 
-	MSG_RAW("[UART%2d] create\n", uart->nport);
+	//MSG_RAW("[UART%2d] create\n", uart->nport);
 
 	for (idx = uart->nport * 2; idx < uart->nport * 2 + 2; idx++) {
 		vfifo = &mtk_uart_vfifo_port[idx];
-		MSG_RAW("[UART%2d] idx=%2d\n", uart->nport, idx);
+		//MSG_RAW("[UART%2d] idx=%2d\n", uart->nport, idx);
 		if (vfifo->size) {
 			vfifo->addr = dma_alloc_coherent(uart->port.dev, vfifo->size, &vfifo->dmahd, GFP_DMA);
 			/* MSG_RAW("Address: virt = 0x%p, phys = 0x%llx\n", vfifo->addr, vfifo->dmahd); */
@@ -1111,9 +1111,9 @@ static int mtk_uart_vfifo_create(struct mtk_uart *uart)
 		err = mtk_uart_vfifo_new_dbgbuf(vfifo);
 		if (err)
 			break;
-		MSG_RAW("[%2d] %p (%04d) ;\n", idx, vfifo->addr, vfifo->size);
+		//MSG_RAW("[%2d] %p (%04d) ;\n", idx, vfifo->addr, vfifo->size);
 	}
-	MSG_RAW("\n");
+	//MSG_RAW("\n");
 	return err;
 }
 
@@ -1123,23 +1123,23 @@ static int mtk_uart_vfifo_delete(struct mtk_uart *uart)
 	struct mtk_uart_vfifo *vfifo;
 	int idx;
 
-	MSG_FUNC_ENTRY();
+	//MSG_FUNC_ENTRY();
 
 	if (!uart->setting->vff) {
-		MSG_RAW("[UART%2d] not support VFF, Cancel free\n", uart->nport);
+		//MSG_RAW("[UART%2d] not support VFF, Cancel free\n", uart->nport);
 		return 0;
 	}
 
-	MSG_RAW("[UART%2d] delete", uart->nport);
+	//MSG_RAW("[UART%2d] delete", uart->nport);
 	for (idx = uart->nport * 2; idx < uart->nport * 2 + 2; idx++) {
 		vfifo = &mtk_uart_vfifo_port[idx];
 		if (vfifo->addr)
 			dma_free_coherent(NULL, vfifo->size, vfifo->addr, vfifo->dmahd);
 		mtk_uart_vfifo_del_dbgbuf(vfifo);
-		MSG_RAW("[%2d] %p (%04d) ;", idx, vfifo->addr, vfifo->size);
+		//MSG_RAW("[%2d] %p (%04d) ;", idx, vfifo->addr, vfifo->size);
 		vfifo->addr = NULL;
 	}
-	MSG_RAW("\n");
+	//MSG_RAW("\n");
 	return 0;
 }
 
@@ -1151,7 +1151,7 @@ int mtk_uart_vfifo_prepare(struct mtk_uart *uart)
 	int tx = uart->nport << 1;
 	int rx = tx + 1;
 
-	MSG_FUNC_ENTRY();
+	//MSG_FUNC_ENTRY();
 
 	if (uart->nport >= UART_NR) {
 		MSG_ERR("wrong port:%d\n", uart->nport);
@@ -1164,14 +1164,14 @@ int mtk_uart_vfifo_prepare(struct mtk_uart *uart)
 	rport = &mtk_uart_vfifo_port[rx];
 	if ((atomic_read(&obj->vffLen[tx]) == tport->size) && (atomic_read(&obj->vffLen[rx]) == rport->size))
 		return 0;
-	MSG_RAW("re-alloc +\n");
+	//MSG_RAW("re-alloc +\n");
 	mtk_uart_vfifo_delete(uart);
 	tport->size = atomic_read(&obj->vffLen[tx]);
 	tport->trig = VFF_TX_THRE(tport->size);
 	rport->size = atomic_read(&obj->vffLen[rx]);
 	rport->trig = VFF_RX_THRE(rport->size);
 	mtk_uart_vfifo_create(uart);
-	MSG_RAW("re-alloc -\n");
+	//MSG_RAW("re-alloc -\n");
 	return 0;
 }
 
@@ -1183,7 +1183,7 @@ static struct mtk_uart_vfifo *mtk_uart_vfifo_alloc(struct mtk_uart *uart, UART_V
 
 	spin_lock_irqsave(&mtk_uart_vfifo_port_lock, flags);
 
-	MSG(INFO, "(%d, %d)", uart->nport, type);
+	//MSG(INFO, "(%d, %d)", uart->nport, type);
 
 	if ((uart->nport >= (ARRAY_SIZE(mtk_uart_vfifo_port) / 2)) || (type >= UART_VFIFO_NUM))
 		vfifo = NULL;
@@ -1192,8 +1192,8 @@ static struct mtk_uart_vfifo *mtk_uart_vfifo_alloc(struct mtk_uart *uart, UART_V
 
 	if (vfifo && vfifo->addr == NULL)
 		vfifo = NULL;
-	if (vfifo)
-		MSG(INFO, "alloc vfifo-%d[%d](%p)\n", uart->nport, vfifo->size, vfifo->addr);
+	//if (vfifo)
+	//	MSG(INFO, "alloc vfifo-%d[%d](%p)\n", uart->nport, vfifo->size, vfifo->addr);
 
 	spin_unlock_irqrestore(&mtk_uart_vfifo_port_lock, flags);
 	return vfifo;
@@ -1302,7 +1302,7 @@ static int mtk_uart_dma_alloc(struct mtk_uart *uart, struct mtk_uart_dma *dma, i
 {
 	int ret = 0;
 
-	MSG_FUNC_ENTRY();
+	//MSG_FUNC_ENTRY();
 
 	if (mode == UART_NON_DMA)
 		return -1;
@@ -1310,7 +1310,7 @@ static int mtk_uart_dma_alloc(struct mtk_uart *uart, struct mtk_uart_dma *dma, i
 	switch (mode) {
 	case UART_TX_VFIFO_DMA:
 		if (!vfifo) {
-			MSG(ERR, "fail due to NULL tx_vfifo\n");
+			//MSG(ERR, "fail due to NULL tx_vfifo\n");
 			ret = -1;
 			break;
 		}
@@ -1377,7 +1377,7 @@ static int mtk_uart_dma_alloc(struct mtk_uart *uart, struct mtk_uart_dma *dma, i
 /*---------------------------------------------------------------------------*/
 void mtk_uart_dma_stop(struct mtk_uart *uart, struct mtk_uart_dma *dma)
 {
-	MSG_FUNC_ENTRY();
+	//MSG_FUNC_ENTRY();
 	if (!dma)
 		return;
 
@@ -1391,7 +1391,7 @@ static void mtk_uart_dma_free(struct mtk_uart *uart, struct mtk_uart_dma *dma)
 {
 	unsigned long flags;
 
-	MSG_FUNC_ENTRY();
+	//MSG_FUNC_ENTRY();
 
 	if (!dma)
 		return;
@@ -1404,7 +1404,7 @@ static void mtk_uart_dma_free(struct mtk_uart *uart, struct mtk_uart_dma *dma)
 
 	if (dma->vfifo && !mtk_uart_vfifo_is_empty(dma->vfifo)) {
 		tasklet_schedule(&dma->tasklet);
-		MSG(DMA, "wait for %s vfifo dma completed!!!\n", dma->dir == DMA_TO_DEVICE ? "TX" : "RX");
+		//MSG(DMA, "wait for %s vfifo dma completed!!!\n", dma->dir == DMA_TO_DEVICE ? "TX" : "RX");
 		wait_for_completion(&dma->done);
 	}
 	spin_lock_irqsave(&uart->port.lock, flags);
@@ -1422,7 +1422,7 @@ static void mtk_uart_dma_free(struct mtk_uart *uart, struct mtk_uart_dma *dma)
 	mtk_uart_reset_dma(dma);
 	mtk_uart_vfifo_disable(uart, dma->vfifo);
 	mtk_uart_vfifo_free(uart, dma->vfifo);
-	MSG(INFO, "free %s dma completed!!!\n", dma->dir == DMA_TO_DEVICE ? "TX" : "RX");
+	//MSG(INFO, "free %s dma completed!!!\n", dma->dir == DMA_TO_DEVICE ? "TX" : "RX");
 	memset(dma, 0, sizeof(struct mtk_uart_dma));
 	spin_unlock_irqrestore(&uart->port.lock, flags);
 
@@ -1456,7 +1456,7 @@ static void mtk_uart_set_baud(struct mtk_uart *uart, int baudrate)
 			}
 			/* [ALPS00137126] End */
 		}
-		MSG(CFG, "CUSTOM, baudrate = %d, divisor = %d\n", baudrate, uart->port.custom_divisor);
+		//MSG(CFG, "CUSTOM, baudrate = %d, divisor = %d\n", baudrate, uart->port.custom_divisor);
 	}
 
 	if (uart->auto_baud)
@@ -1575,7 +1575,7 @@ static void mtk_uart_tx_chars(struct mtk_uart *uart)
 
 	/* deal with x_char first */
 	if (unlikely(port->x_char)) {
-		MSG(INFO, "detect x_char!!\n");
+		//MSG(INFO, "detect x_char!!\n");
 		uart->write_byte(uart, port->x_char);
 		port->icount.tx++;
 		port->x_char = 0;
@@ -1612,7 +1612,7 @@ static void mtk_uart_tx_chars(struct mtk_uart *uart)
 
 	} while (--count > 0);
 
-	MSG(INFO, "TX %d chars\n", port->fifosize - 1 - count);
+	//MSG(INFO, "TX %d chars\n", port->fifosize - 1 - count);
 
 	if (uart_circ_chars_pending(xmit) < WAKEUP_CHARS)
 		uart_write_wakeup(port);
@@ -1723,7 +1723,7 @@ static unsigned int mtk_uart_tx_empty(struct uart_port *port)
 {
 	struct mtk_uart *uart = (struct mtk_uart *)port;
 
-	MSG_FUNC_ENTRY();
+	//MSG_FUNC_ENTRY();
 
 #if defined(ENABLE_VFIFO)
 	if (uart->tx_mode == UART_TX_VFIFO_DMA)
@@ -1741,7 +1741,7 @@ static void mtk_uart_stop_tx(struct uart_port *port)
 {
 	struct mtk_uart *uart = (struct mtk_uart *)port;
 
-	MSG_FUNC_ENTRY();
+	//MSG_FUNC_ENTRY();
 #if defined(ENABLE_VFIFO)
 	if (uart->tx_mode == UART_TX_VFIFO_DMA) {
 		/*1. UART_IER_ETBEI can't be disabled or zero data appears in TX */
@@ -1797,7 +1797,7 @@ static void mtk_uart_send_xchar(struct uart_port *port, char ch)
 	struct mtk_uart *uart = (struct mtk_uart *)port;
 	unsigned long flags;
 
-	MSG_FUNC_ENTRY();
+	//MSG_FUNC_ENTRY();
 
 	if (uart->tx_stop)
 		return;
@@ -1816,7 +1816,7 @@ static void mtk_uart_enable_ms(struct uart_port *port)
 {
 	struct mtk_uart *uart = (struct mtk_uart *)port;
 
-	MSG_FUNC_ENTRY();
+	//MSG_FUNC_ENTRY();
 	uart->ms_enable = 1;
 }
 
@@ -1943,7 +1943,7 @@ static void mtk_uart_shutdown(struct uart_port *port)
 {
 	struct mtk_uart *uart = (struct mtk_uart *)port;
 
-	MSG_FUNC_ENTRY();
+	//MSG_FUNC_ENTRY();
 
 	/* disable interrupts */
 	mtk_uart_disable_intrs(uart, UART_IER_ALL_INTS);
@@ -1970,7 +1970,7 @@ static void mtk_uart_flush_buffer(struct uart_port *port)
 #if defined(ENABLE_DEBUG)
 	struct mtk_uart *uart = (struct mtk_uart *)port;
 
-	MSG_FUNC_ENTRY();
+	//MSG_FUNC_ENTRY();
 #endif
 	/* mtk_uart_fifo_flush(uart); */
 }
@@ -2016,7 +2016,7 @@ static void mtk_uart_set_termios(struct uart_port *port, struct ktermios *termio
 	int parity = 0;
 	int stopbit = 1;
 
-	MSG_FUNC_ENTRY();
+	//MSG_FUNC_ENTRY();
 
 	/* datalen : default 8bits */
 	switch (termios->c_cflag & CSIZE) {
@@ -2317,7 +2317,7 @@ static int mtk_uart_probe(struct platform_device *pdev)
 	}
 #endif
 	uart = &mtk_uarts[pdev->id];
-	MSG_FUNC_ENTRY();
+	//MSG_FUNC_ENTRY();
 
 /* For clock setting */
 #if !defined(CONFIG_MTK_CLKMGR) && !defined(CONFIG_MTK_FPGA)
@@ -2505,11 +2505,11 @@ static int mtk_uart_pm_freeze(struct device *device)
 	port_idx = uart->nport;
 	if (uart_freeze_enable[port_idx]) {
 		ret = uart_suspend_port(&mtk_uart_drv, &uart->port);
-		pr_warn("[%s] here.\n", __func__);
+		//pr_warn("[%s] here.\n", __func__);
 		/* To keeping uart idle state */
 		/* tx pin:  idle->high   power down->low */
 		mtk_uart_switch_tx_to_gpio(uart);
-		pr_warn("[%s] done.\n", __func__);
+		//pr_warn("[%s] done.\n", __func__);
 	}
 
 	return 0;		/* mtk_uart_suspend(pdev, PMSG_SUSPEND); */
@@ -2530,8 +2530,8 @@ static int mtk_uart_pm_restore(struct device *device)
 	if (uart_freeze_enable[port_idx]) {
 		mtk_uart_switch_to_tx(uart);
 		ret = uart_resume_port(&mtk_uart_drv, &uart->port);
-		pr_warn("[%s] uart (%p) base: 0x%lx, nport %d, dma mode: %d\n", __func__,
-			uart, uart->base, uart->nport, uart->dma_mode);
+		//pr_warn("[%s] uart (%p) base: 0x%lx, nport %d, dma mode: %d\n", __func__,
+		//   uart, uart->base, uart->nport, uart->dma_mode);
 	}
 
 	return mtk_uart_resume(pdev);

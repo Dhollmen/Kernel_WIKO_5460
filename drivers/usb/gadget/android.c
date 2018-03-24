@@ -15,11 +15,6 @@
  * GNU General Public License for more details.
  *
  */
-#ifdef pr_fmt
-#undef pr_fmt
-#endif
-#define pr_fmt(fmt) "["KBUILD_MODNAME"]" fmt
-
 #include <linux/init.h>
 #include <linux/module.h>
 #include <linux/fs.h>
@@ -39,7 +34,6 @@
 
 #include "gadget_chips.h"
 
-
 #include "f_fs.c"
 #include "f_audio_source.c"
 #ifdef CONFIG_SND_RAWMIDI
@@ -55,7 +49,6 @@
 #include "f_ecm.c"
 #include "f_eem.c"
 #include "u_ether.c"
-
 
 #ifdef CONFIG_MTK_C2K_SUPPORT
 #include "viatel_rawbulk.h"
@@ -121,8 +114,22 @@ static const char longname[] = "Gadget Android";
 #define PRODUCT_STRING "MT65xx Android Phone"
 #endif
 
-
 //#define USB_LOG "USB"
+
+#ifdef pr_fmt
+#undef pr_fmt
+#endif
+#define pr_fmt(fmt) "["KBUILD_MODNAME"]" fmt
+
+#ifdef pr_notice
+#undef pr_notice
+#endif
+#define pr_notice(fmt, ...)
+
+#ifdef pr_info
+#undef pr_info
+#endif
+#define pr_info(fmt, ...)
 
 struct android_usb_function {
 	char *name;
@@ -2735,13 +2742,13 @@ static ssize_t andoid_usbif_proc_write(struct file *file, const char __user *buf
 
 	if ((msg[0] == '1') && (andoid_usbif_driver_on == 0)){
 		pr_notice("start usb android driver ===> \n");
-		printk("start usb android driver ===> \n");
+		//printk("start usb android driver ===> \n");
 		android_start() ;
 		andoid_usbif_driver_on = 1 ;
 		pr_notice("start usb android driver <=== \n");
 	}else if ((msg[0] == '0') && (andoid_usbif_driver_on == 1)){
 		pr_notice("stop usb android driver ===> \n");
-		printk("stop usb android driver ===> \n");
+		//printk("stop usb android driver ===> \n");
 		andoid_usbif_driver_on = 0 ;
 		android_stop() ;
 
@@ -2794,7 +2801,7 @@ static int __init init(void)
 
 	if (prEntry)
 	{
-		printk("create the android_usbif_init proc OK!\n") ;
+		//printk("create the android_usbif_init proc OK!\n") ;
 	}else{
 		printk("[ERROR] create the android_usbif_init proc FAIL\n") ;
 	}
@@ -2818,11 +2825,11 @@ late_initcall(init);
 
 static void __exit cleanup(void)
 {
-	printk("[U3D] android cleanup ===> \n") ;
+	//printk("[U3D] android cleanup ===> \n") ;
 	class_destroy(android_class);
 	kfree(_android_dev);
 	_android_dev = NULL;
-	printk("[U3D] android cleanup <=== \n") ;
+	//printk("[U3D] android cleanup <=== \n") ;
 }
 module_exit(cleanup);
 

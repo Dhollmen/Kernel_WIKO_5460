@@ -52,6 +52,7 @@
 #undef ERR
 #endif
 
+#if 0
 #define WARNING(fmt, args...) yprintk(KERN_WARNING, fmt, ## args)
 #define INFO(fmt, args...) yprintk(KERN_INFO, fmt, ## args)
 #define ERR(fmt, args...) yprintk(KERN_ERR, fmt, ## args)
@@ -67,7 +68,12 @@
 				__func__, __LINE__ , ## args); \
 		} \
 	} } while (0)
-
+#else
+#define WARNING(fmt, args...)
+#define INFO(fmt, args...)
+#define ERR(fmt, args...)
+#define xprintk(level,  format, args...)
+#endif
 extern unsigned musb_debug;
 extern unsigned musb_uart_debug;
 
@@ -79,8 +85,11 @@ static inline int _dbg_level(unsigned level)
 #ifdef DBG
 #undef DBG
 #endif
+#if 0
 #define DBG(level, fmt, args...) xprintk(level, fmt, ## args)
-
+#else
+#define DBG(level, fmt, args...)
+#endif
 /* extern const char *otg_state_string(struct musb *); */
 
 extern int musb_init_debugfs(struct musb *musb);

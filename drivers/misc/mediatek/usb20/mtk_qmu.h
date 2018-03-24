@@ -71,7 +71,7 @@ static inline int mtk_dbg_level(unsigned level)
 #define LOG_INFO		6
 #define LOG_DBG		7
 
-#define QMU_DBG_ON
+//#define QMU_DBG_ON
 #ifdef QMU_DBG_ON
 #define QMU_ERR(format, args...) do {if (mtk_dbg_level(LOG_ERR)) \
 	pr_warn("QMU_ERR,<%s %d>, " format , __func__, __LINE__ , ## args);  } \

@@ -66,6 +66,7 @@ static int hal_log_print(const char *str, ...)
 #define DFT_TAG         "[BTIF-DFT]"
 #endif
 
+#if 0
 #define BTIF_LOUD_FUNC(fmt, arg ...) \
 do { \
 	if (mtk_btif_hal_get_log_lvl() >= BTIF_LOG_LOUD) \
@@ -107,6 +108,16 @@ do { \
 		hal_log_print(DFT_TAG "<%s> <%d>\n", \
 		__func__, __LINE__); \
 } while (0)
+
+#else
+
+#define BTIF_LOUD_FUNC(fmt, arg ...)
+#define BTIF_INFO_FUNC(fmt, arg ...)
+#define BTIF_WARN_FUNC(fmt, arg ...)
+#define BTIF_ERR_FUNC(fmt, arg ...)
+#define BTIF_DBG_FUNC(fmt, arg ...)
+#define BTIF_TRC_FUNC(f)
+#endif
 
 /*-----------------------------------Enum Defination--------------------------------*/
 /*IRQ sensetive type */

@@ -56,14 +56,22 @@
 *******************************************************************************/
 /*----------------------------------------------------------------------------*/
 #define APS_TAG                  "[TGesture] "
+#if 0
 #define APS_FUN(f)               printk(KERN_INFO APS_TAG"%s\n", __FUNCTION__)
 #define APS_ERR(fmt, args...)    printk(KERN_ERR  APS_TAG"%s %d : "fmt, __FUNCTION__, __LINE__, ##args)
 #define APS_LOG(fmt, args...)    printk(KERN_ERR APS_TAG fmt, ##args)
 #define APS_DBG(fmt, args...)    printk(KERN_INFO APS_TAG fmt, ##args)         
-#define TGESTURE_DEBUG_FUNC       printk //()               do{\
+#define TGESTURE_DEBUG_FUNC      printk ()               do{\
                                          printk("<<-GTP-FUNC->> Func:%s@Line:%d\n",__func__,__LINE__);\
                                        }while(0)
+#else
+#define APS_FUN(f)
+#define APS_ERR(fmt, args...)
+#define APS_LOG(fmt, args...)
+#define APS_DBG(fmt, args...)
+#define TGESTURE_DEBUG_FUNC
 
+#endif
 static	struct work_struct	eint_work;
 static struct input_dev *TGesture_key_dev;
 extern int gBackLightLevel;
@@ -167,9 +175,9 @@ static ssize_t TGesture_config_read_proc(struct file *file, char __user *page, s
     {
         return 0;
     }
-	printk("TGesture1:%d\n",gTGesture);
+	//printk("TGesture1:%d\n",gTGesture);
        ptr += sprintf(ptr, "0x%c,%s ", gTGesture,Tg_buf);
-      printk("TGesture2:%s\n",ptr);
+      //printk("TGesture2:%s\n",ptr);
        *ppos += ptr - page;
      return (ptr - page) ;
 }
@@ -196,7 +204,7 @@ if(atomic_read(&tp_write_flag))
 {
      atomic_set(&tp_write_flag,0);
      bEnTGesture=config[0]-48;
-     printk("===== TGesture_config_write_proc%d=====",bEnTGesture);
+     //printk("===== TGesture_config_write_proc%d=====",bEnTGesture);
      atomic_set(&tp_write_flag,1);
 }
     // printk("====LGC=TGesture_config_write_procwrite bEnTGesture==%d===\n",bEnTGesture);
@@ -261,7 +269,7 @@ static int TGesture_probe(struct platform_device *pdev)
         int err;
 	APS_FUN();  
 	
-	printk("==============TGesture==================\n");
+	//printk("==============TGesture==================\n");
 	if((err = TGesture_create_attr(&TGesture_driver.driver)))
 	{
 		printk("create attribute err = %d\n", err);
@@ -285,7 +293,7 @@ static int TGesture_remove(struct platform_device *pdev)
 	
 	APS_FUN(); 
 	int err;	
-         printk("==============TGesture_remove==================\n");		
+         //printk("==============TGesture_remove==================\n");		
 	if((err =  TGesture_delete_attr(&TGesture_driver.driver)))
 	{
 		printk("ap3220_delete_attr fail: %d\n", err);

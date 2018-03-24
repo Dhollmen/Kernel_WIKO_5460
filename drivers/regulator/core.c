@@ -39,6 +39,7 @@
 #include "dummy.h"
 #include "internal.h"
 
+#if 0
 #define rdev_crit(rdev, fmt, ...)					\
 	pr_crit("%s: " fmt, rdev_get_name(rdev), ##__VA_ARGS__)
 #define rdev_err(rdev, fmt, ...)					\
@@ -49,6 +50,13 @@
 	pr_info("%s: " fmt, rdev_get_name(rdev), ##__VA_ARGS__)
 #define rdev_dbg(rdev, fmt, ...)					\
 	pr_debug("%s: " fmt, rdev_get_name(rdev), ##__VA_ARGS__)
+#else
+#define rdev_crit(rdev, fmt, ...)
+#define rdev_err(rdev, fmt, ...)
+#define rdev_warn(rdev, fmt, ...)
+#define rdev_info(rdev, fmt, ...)
+#define rdev_dbg(rdev, fmt, ...)
+#endif
 
 static DEFINE_MUTEX(regulator_list_mutex);
 static LIST_HEAD(regulator_list);

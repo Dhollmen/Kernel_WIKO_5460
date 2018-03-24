@@ -220,7 +220,6 @@
 
 #include "gadget_chips.h"
 
-
 /*------------------------------------------------------------------------*/
 
 #define FSG_DRIVER_DESC		"Mass Storage Function"
@@ -232,23 +231,23 @@ static const char fsg_string_interface[] = "Mass Storage";
 
 #if defined(CONFIG_PROJECT_P4605_MMX_IN)
 #define PRODUCT_NAME "Micromax Q427"
-#define MASS_NAME "File-CD Gadget"
 #elif defined(CONFIG_PROJECT_P4601_CLF_PH)
 #define PRODUCT_NAME "Thrill Access"
-#define MASS_NAME "File-CD Gadget"
 #elif defined(CONFIG_PROJECT_P4605_BLU_US)
 #define PRODUCT_NAME "BLU Studio Touch"
-#define MASS_NAME "File-CD Gadget"
 #elif defined(CONFIG_PROJECT_P6601_BLU_US)
 #define PRODUCT_NAME "BLU R1 HD"
-#define MASS_NAME "File-CD Gadget"
 #elif defined(CONFIG_PROJECT_P4601_CAS_TR)
 #define PRODUCT_NAME "CASPER_VIA_E1"
-#define MASS_NAME "File-CD Gadget"
 #else
-#define PRODUCT_NAME "Linux"
-#define MASS_NAME "File-CD Gadget"
+#define PRODUCT_NAME "Wiko Fever"
 #endif
+#define MASS_NAME "File-CD Gadget"
+
+#ifdef DBG
+#undef DBG
+#endif /* !DEBUG */
+#define DBG(lun, fmt, args...)
 
 /*-------------------------------------------------------------------------*/
 
@@ -1905,8 +1904,6 @@ static int do_scsi_command(struct fsg_common *common)
 	int			reply = -EINVAL;
 	int			i;
 	static char		unknown[16];
-
-	dump_cdb(common);
 
 	/* Wait for the next buffer to become available for data or status */
 	bh = common->next_buffhd_to_fill;

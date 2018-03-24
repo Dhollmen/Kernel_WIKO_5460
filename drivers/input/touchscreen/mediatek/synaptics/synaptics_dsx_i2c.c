@@ -142,7 +142,7 @@
 #define NO_SLEEP_ON (1 << 2)
 #define CONFIGURED (1 << 7)
 #define TINNO_DEVICE_INFO
-#if 1
+#if 0
 #define TP_DBG(fmt, arg...) \
 	printk("[CTP-synaptics] %s (line:%ld) :" fmt "\r\n", __func__, __LINE__, ## arg)
 #else

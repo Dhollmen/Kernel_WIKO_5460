@@ -510,7 +510,7 @@ static void wdt_fiq(void *arg, void *regs, void *svc_sp)
 #else				/* CONFIG_FIQ_GLUE */
 static irqreturn_t mtk_wdt_isr(int irq, void *dev_id)
 {
-	pr_err("fwq mtk_wdt_isr\n");
+	//pr_err("fwq mtk_wdt_isr\n");
 #ifndef __USING_DUMMY_WDT_DRV__	/* FPGA will set this flag */
 
 	wdt_report_info();
@@ -529,7 +529,7 @@ static int mtk_wdt_probe(struct platform_device *dev)
 	int ret = 0;
 	unsigned int interval_val;
 
-	pr_err("******** MTK WDT driver probe!! ********\n");
+	//pr_err("******** MTK WDT driver probe!! ********\n");
 
 	if (!toprgu_base) {
 		toprgu_base = of_iomap(dev->dev.of_node, 0);

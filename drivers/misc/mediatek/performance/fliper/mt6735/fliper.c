@@ -22,6 +22,7 @@
 #include "mach/fliper.h"
 #include "mach/mt_mem_bw.h"
 #include <mt_vcore_dvfs.h>
+#if 0
 #define SEQ_printf(m, x...)\
 	do {\
 		if (m)\
@@ -29,6 +30,11 @@
 		else\
 			pr_debug(x);\
 	} while (0)
+#else
+#define SEQ_printf(m, x...)
+#undef pr_crit
+#define pr_crit(fmt, ...)
+#endif
 
 #define X_ms 100
 #define Y_steps (2000/X_ms)

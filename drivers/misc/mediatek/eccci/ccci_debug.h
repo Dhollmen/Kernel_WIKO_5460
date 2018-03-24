@@ -55,10 +55,6 @@ do { \
 	else if (ccci_debug_enable == 5 || ccci_debug_enable == 6) \
 		pr_err("[md%d]" fmt, (idx+1), ##args); \
 } while (0)
-#else
-#define CCCI_REP_MSG(idx, tag, fmt, args...) do {} while (0)
-#endif
-
 /* for critical init log*/
 #define CCCI_NOTICE_MSG(idx, tag, fmt, args...) pr_notice("[md%d/ntc]" fmt, (idx+1), ##args)
 /* for error log */
@@ -95,10 +91,23 @@ do { \
 	else if (ccci_debug_enable == 5 || ccci_debug_enable == 6) \
 		pr_err("[md%d]" fmt, (idx+1), ##args); \
 } while (0)
-
 #define CCCI_DBG_COM_MSG(fmt, args...)		 CCCI_DBG_MSG(0, "com", fmt, ##args)
 #define CCCI_INF_COM_MSG(fmt, args...)		 CCCI_INF_MSG(0, "com", fmt, ##args)
 #define CCCI_ERR_COM_MSG(fmt, args...)		 CCCI_ERR_MSG(0, "com", fmt, ##args)
+
+#else
+
+#define CCCI_REP_MSG(idx, tag, fmt, args...)
+#define CCCI_NOTICE_MSG(idx, tag, fmt, args...)
+#define CCCI_ERR_MSG(idx, tag, fmt, args...)
+#define CCCI_EXP_MSG(idx, tag, fmt, args...)
+#define CCCI_EXP_INF_MSG(idx, tag, fmt, args...)
+#define CCCI_DUMP_MSG1(idx, tag, fmt, args...)
+#define CCCI_DUMP_MSG2(idx, tag, fmt, args...)
+#define CCCI_DBG_COM_MSG(fmt, args...)
+#define CCCI_INF_COM_MSG(fmt, args...)
+#define CCCI_ERR_COM_MSG(fmt, args...)
+#endif
 
 #define CLDMA_TRACE
 /* #define PORT_NET_TRACE */

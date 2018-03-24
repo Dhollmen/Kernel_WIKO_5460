@@ -1460,12 +1460,12 @@ static int handle_mount_opt(struct super_block *sb, char *opt, int token,
 	switch (token) {
 	case Opt_noacl:
 	case Opt_nouser_xattr:
-		ext4_msg(sb, KERN_WARNING, deprecated_msg, opt, "3.5");
+		//ext4_msg(sb, KERN_WARNING, deprecated_msg, opt, "3.5");
 		break;
 	case Opt_sb:
 		return 1;	/* handled by get_sb_block() */
 	case Opt_removed:
-		ext4_msg(sb, KERN_WARNING, "Ignoring removed %s option", opt);
+		//ext4_msg(sb, KERN_WARNING, "Ignoring removed %s option", opt);
 		return 1;
 	case Opt_abort:
 		sbi->s_mount_flags |= EXT4_MF_FS_ABORTED;
@@ -1607,11 +1607,11 @@ static int handle_mount_opt(struct super_block *sb, char *opt, int token,
 	} else if (token == Opt_test_dummy_encryption) {
 #ifdef CONFIG_EXT4_FS_ENCRYPTION
 		sbi->s_mount_flags |= EXT4_MF_TEST_DUMMY_ENCRYPTION;
-		ext4_msg(sb, KERN_WARNING,
-			 "Test dummy encryption mode enabled");
+		//ext4_msg(sb, KERN_WARNING,
+		//	 "Test dummy encryption mode enabled");
 #else
-		ext4_msg(sb, KERN_WARNING,
-			 "Test dummy encryption mount option ignored");
+		//ext4_msg(sb, KERN_WARNING,
+		//	 "Test dummy encryption mount option ignored");
 #endif
 	} else if (m->flags & MOPT_DATAJ) {
 		if (is_remount) {
@@ -1649,8 +1649,8 @@ static int handle_mount_opt(struct super_block *sb, char *opt, int token,
 		if (m->flags & MOPT_CLEAR)
 			arg = !arg;
 		else if (unlikely(!(m->flags & MOPT_SET))) {
-			ext4_msg(sb, KERN_WARNING,
-				 "buggy handling of option %s", opt);
+			//ext4_msg(sb, KERN_WARNING,
+			//	 "buggy handling of option %s", opt);
 			WARN_ON(1);
 			return -1;
 		}
@@ -3601,9 +3601,9 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
 
 	if (!parse_options((char *) sbi->s_es->s_mount_opts, sb,
 			   &journal_devnum, &journal_ioprio, 0)) {
-		ext4_msg(sb, KERN_WARNING,
-			 "failed to parse options in superblock: %s",
-			 sbi->s_es->s_mount_opts);
+		//ext4_msg(sb, KERN_WARNING,
+		//	 "failed to parse options in superblock: %s",
+		//	 sbi->s_es->s_mount_opts);
 	}
 	sbi->s_def_mount_opt = sbi->s_mount_opt;
 	if (!parse_options((char *) data, sb, &journal_devnum,

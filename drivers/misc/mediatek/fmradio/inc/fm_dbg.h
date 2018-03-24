@@ -46,6 +46,8 @@
 
 extern fm_u32 g_dbg_level;
 
+#if 0
+
 #define WCN_DBG(flag, fmt, args...) \
 	do { \
 		if ((((flag)&0x0000000f) <= (g_dbg_level&0x0000000f)) && ((flag)&0xfffffff0) & g_dbg_level) { \
@@ -109,4 +111,18 @@ extern fm_u32 g_dbg_level;
 		} \
 	} while (0)
 
+#else
+    
+#define WCN_DBG(flag, fmt, args...)
+#define FM_LOG_DBG(flag, fmt, args...)
+#define FM_LOG_INF(flag, fmt, args...)
+#define FM_LOG_NTC(flag, fmt, args...)
+#define FM_LOG_WAR(flag, fmt, args...)
+#define FM_LOG_ERR(flag, fmt, args...)
+#define FM_LOG_CRT(flag, fmt, args...)
+#define FM_LOG_ALT(flag, fmt, args...)
+#define FM_LOG_EMG(flag, fmt, args...)
+
+#endif
+    
 #endif /* __FM_DBG_H__ */

@@ -598,7 +598,7 @@ static int mtk_wdt_probe(struct platform_device *dev)
 	unsigned int interval_val;
 	unsigned int nonrst;
 
-	pr_err("******** MTK WDT driver probe!! ********\n");
+	//pr_err("******** MTK WDT driver probe!! ********\n");
 #ifdef CONFIG_OF
 	if (!toprgu_base) {
 		toprgu_base = of_iomap(dev->dev.of_node, 0);
@@ -829,7 +829,7 @@ static int __init mtk_wdt_init(void)
 		pr_err("****[mtk_wdt_driver] Unable to register driver (%d)\n", ret);
 		return ret;
 	}
-	pr_alert("mtk_wdt_init ok\n");
+	//pr_alert("mtk_wdt_init ok\n");
 	return 0;
 }
 

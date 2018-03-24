@@ -28,7 +28,10 @@
 
 #include <linux/printk.h>
 
-
+#ifdef INFO
+#undef INFO
+#endif
+#define INFO(dev,fmt,args...)
 
 /*
  * The code in this file is utility code, used to build a gadget driver

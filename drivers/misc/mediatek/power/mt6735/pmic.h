@@ -11,8 +11,7 @@
 #define PMIC6328_E2_CID_CODE    0x2820
 #define PMIC6328_E3_CID_CODE    0x2830
 
-
-
+#if 0
 #define pmic_emerg(fmt, args...)		pr_emerg("[SPM-PMIC] " fmt, ##args)
 #define pmic_alert(fmt, args...)		pr_alert("[SPM-PMIC] " fmt, ##args)
 #define pmic_crit(fmt, args...)		pr_crit("[SPM-PMIC] " fmt, ##args)
@@ -21,6 +20,16 @@
 #define pmic_notice(fmt, args...)	pr_notice("[SPM-PMIC] " fmt, ##args)
 #define pmic_info(fmt, args...)		pr_info("[SPM-PMIC] " fmt, ##args)
 #define pmic_debug(fmt, args...)		pr_info("[SPM-PMIC] " fmt, ##args)	/* pr_debug show nothing */
+#else
+#define pmic_emerg(fmt, args...)
+#define pmic_alert(fmt, args...)
+#define pmic_crit(fmt, args...)
+#define pmic_err(fmt, args...)
+#define pmic_warn(fmt, args...)
+#define pmic_notice(fmt, args...)
+#define pmic_info(fmt, args...)
+#define pmic_debug(fmt, args...)
+#endif
 
 /* just use in suspend flow for important log due to console suspend */
 #define pmic_spm_crit2(fmt, args...)		\

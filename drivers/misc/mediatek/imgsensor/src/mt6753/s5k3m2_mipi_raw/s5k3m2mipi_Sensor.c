@@ -298,6 +298,7 @@ void write_cmos_sensor(kal_uint16 addr, kal_uint16 para)
     iWriteRegI2C(pusendcmd , 4, imgsensor.i2c_write_id);
 }
 
+#if 0
 static kal_uint16 read_cmos_sensor_8(kal_uint16 addr)
 {
     kdSetI2CSpeed(imgsensor_info.i2c_speed); // Add this func to set i2c speed by each sensor
@@ -306,6 +307,7 @@ static kal_uint16 read_cmos_sensor_8(kal_uint16 addr)
     iReadRegI2C(pusendcmd , 2, (u8*)&get_byte,1,imgsensor.i2c_write_id);
     return get_byte;
 }
+#endif
 
 void write_cmos_sensor_8(kal_uint16 addr, kal_uint8 para)
 {
@@ -413,6 +415,7 @@ static void write_shutter(kal_uint16 shutter)
 * GLOBALS AFFECTED
 *
 *************************************************************************/
+#if 0
 static void set_shutter(kal_uint16 shutter)
 {
 	unsigned long flags;
@@ -422,8 +425,7 @@ static void set_shutter(kal_uint16 shutter)
 	
 	write_shutter(shutter);
 }	/*	set_shutter */
-
-
+#endif
 
 static kal_uint16 gain2reg(const kal_uint16 gain)
 {
@@ -540,7 +542,7 @@ static void sensor_init(void)
   //s 2014/12/01, bruce
   kal_uint16 chip_id = 0;
   chip_id = read_cmos_sensor(0x0002);
- printk("YC sensor_init 1 ######################################## \n"); 
+  //printk("YC sensor_init 1 ######################################## \n"); 
   if (chip_id == 0xC001) {
   LOG_INF("-- sensor_init, chip id = 0xC001\n");
   //e 2014/12/01, bruce
@@ -2003,7 +2005,7 @@ static void preview_setting(void)
         // e 2014/12/01, bruce
 	LOG_INF("hesong 3 Preview E! ");
 	//p200
-	printk("YC preview_setting 1 ######################################## \n"); 
+	//printk("YC preview_setting 1 ######################################## \n"); 
 
 	write_cmos_sensor(0x6028,0x4000);
 	write_cmos_sensor(0x32CA,0x022B);
@@ -2805,7 +2807,7 @@ static kal_uint32 get_imgsensor_id(UINT32 *sensor_id)
 	kal_uint8 i = 0;
     kal_uint8 retry = 1;
     /*sensor have two i2c address 0x6c 0x6d & 0x21 0x20, we should detect the module used i2c address*/
-	printk("YC get_imgsensor_id 1 ######################################## \n"); 
+	//printk("YC get_imgsensor_id 1 ######################################## \n"); 
 
 	
     while (imgsensor_info.i2c_addr_table[i] != 0xff) {
@@ -2817,15 +2819,15 @@ static kal_uint32 get_imgsensor_id(UINT32 *sensor_id)
 			write_cmos_sensor(0x602E,0x0000);
 			*sensor_id = read_cmos_sensor(0x6F12);
 			//*sensor_id = imgsensor_info.sensor_id;
-			printk("YC get_imgsensor_id 1 get id =0x%x\n",*sensor_id); 
+			//printk("YC get_imgsensor_id 1 get id =0x%x\n",*sensor_id); 
 
 			
             if (*sensor_id == imgsensor_info.sensor_id) {               
-                printk("YC i2c write id: 0x%x, sensor id: 0x%x\n", imgsensor.i2c_write_id,*sensor_id); 
+            //  printk("YC i2c write id: 0x%x, sensor id: 0x%x\n", imgsensor.i2c_write_id,*sensor_id); 
 			//	read_s5k3m2_eeprom_mtk_fmt();//yixuhong 20150807 add,read otp data when get right sensor id
                 return ERROR_NONE;
             }   
-            printk("YC Read sensor id fail, write id: 0x%x, sensor id = 0x%x\n", imgsensor.i2c_write_id,*sensor_id);
+            //printk("YC Read sensor id fail, write id: 0x%x, sensor id = 0x%x\n", imgsensor.i2c_write_id,*sensor_id);
             retry--;
         } while(retry > 0);
         i++;
@@ -2867,7 +2869,7 @@ static kal_uint32 open(void)
 	kal_uint16 sensor_id = 0; 
 	LOG_1;
 	LOG_2;
-	printk("YC open 1 ######################################## \n"); 
+	//printk("YC open 1 ######################################## \n"); 
 	//sensor have two i2c address 0x5a 0x5b & 0x21 0x20, we should detect the module used i2c address
 	    while (imgsensor_info.i2c_addr_table[i] != 0xff) {
         spin_lock(&imgsensor_drv_lock);
@@ -2879,10 +2881,10 @@ static kal_uint32 open(void)
             sensor_id =  read_cmos_sensor(0x6F12);
 			//sensor_id = imgsensor_info.sensor_id;
             if (sensor_id == imgsensor_info.sensor_id) {                
-                printk("YC i2c write id: 0x%x, sensor id: 0x%x\n", imgsensor.i2c_write_id,sensor_id);   
+                //printk("YC i2c write id: 0x%x, sensor id: 0x%x\n", imgsensor.i2c_write_id,sensor_id);   
                 break;
             }   
-            printk("YC Read sensor id fail, id: 0x%x\n", imgsensor.i2c_write_id,sensor_id);
+            //printk("YC Read sensor id fail, id: 0x%x\n", imgsensor.i2c_write_id,sensor_id);
             retry--;
         } while(retry > 0);
         i++;
@@ -2962,7 +2964,7 @@ static kal_uint32 preview(MSDK_SENSOR_EXPOSURE_WINDOW_STRUCT *image_window,
 					  MSDK_SENSOR_CONFIG_STRUCT *sensor_config_data)
 {
 	LOG_INF("E\n");
-	printk("YC preview 1 ######################################## \n"); 
+	//printk("YC preview 1 ######################################## \n"); 
 
 
 	spin_lock(&imgsensor_drv_lock);
@@ -3658,7 +3660,7 @@ static kal_uint32 feature_control(MSDK_SENSOR_FEATURE_ENUM feature_id,
 	SENSOR_WINSIZE_INFO_STRUCT *wininfo;	
 	MSDK_SENSOR_REG_INFO_STRUCT *sensor_reg_data=(MSDK_SENSOR_REG_INFO_STRUCT *) feature_para;
     unsigned long long *feature_data=(unsigned long long *) feature_para;
-    unsigned long long *feature_return_para=(unsigned long long *) feature_para;	
+    //unsigned long long *feature_return_para=(unsigned long long *) feature_para;	
  
 	LOG_INF("YC S5k3m2 feature_id = %d", feature_id);
 	switch (feature_id) {

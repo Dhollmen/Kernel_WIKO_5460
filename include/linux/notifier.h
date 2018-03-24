@@ -194,9 +194,9 @@ static inline int notifier_to_errno(int ret)
  * MTK_CPU_HOTPLUG_DEBUG_1: using printk to log cpu notify callback in notifier_call_chain
  * MTK_CPU_HOTPLUG_DEBUG_2: using aee to log cpu notify callback in notifier_call_chain
  */
-#define MTK_CPU_HOTPLUG_DEBUG_0
-/* #define MTK_CPU_HOTPLUG_DEBUG_1 */
-#define MTK_CPU_HOTPLUG_DEBUG_2
+/* #define MTK_CPU_HOTPLUG_DEBUG_0 */
+#define MTK_CPU_HOTPLUG_DEBUG_1
+/* #define MTK_CPU_HOTPLUG_DEBUG_2 */
 
 extern struct raw_notifier_head cpu_chain;
 

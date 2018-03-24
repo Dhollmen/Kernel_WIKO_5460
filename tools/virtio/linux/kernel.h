@@ -94,7 +94,7 @@ static inline void free_page(unsigned long addr)
 #define pr_debug(format, ...) do {} while (0)
 #endif
 #define dev_err(dev, format, ...) fprintf (stderr, format, ## __VA_ARGS__)
-#define dev_warn(dev, format, ...) fprintf (stderr, format, ## __VA_ARGS__)
+#define dev_warn(dev, format, ...) do {} while (0)
 
 #define min(x, y) ({				\
 	typeof(x) _min1 = (x);			\

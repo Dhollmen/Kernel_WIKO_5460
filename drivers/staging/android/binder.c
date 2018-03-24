@@ -4389,12 +4389,14 @@ static void binder_deferred_flush(struct binder_proc *proc)
 	}
 	wake_up_interruptible_all(&proc->wait);
 
+#if 0
 #ifdef MTK_BINDER_DEBUG
 	if (wake_count)
 		pr_debug("binder_flush: %d woke %d threads\n", proc->pid, wake_count);
 #else
 	binder_debug(BINDER_DEBUG_OPEN_CLOSE,
 		     "binder_flush: %d woke %d threads\n", proc->pid, wake_count);
+#endif
 #endif
 }
 

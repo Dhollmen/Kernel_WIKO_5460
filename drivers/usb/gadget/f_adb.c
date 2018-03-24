@@ -225,8 +225,8 @@ static void adb_debug_read_copy_to_user(char __user *buf, struct usb_request *re
 		if (ret != 0) {
 			pr_err("copy_to_user fail\n");
 		}
-		printk(KERN_INFO "adb_read A_DBUG (0x%x) (0x%x) (0x%x)\n", dbg->command,
-		       dbg->msg_check, dbg->data_check);
+		//printk(KERN_INFO "adb_read A_DBUG (0x%x) (0x%x) (0x%x)\n", dbg->command,
+		//     dbg->msg_check, dbg->data_check);
 	}
 }
 
@@ -391,8 +391,8 @@ static int adb_create_bulk_endpoints(struct adb_dev *dev,
 	return 0;
 
  fail:
-	printk(KERN_ERR "%s %s %d: adb_bind() could not allocate requests\n", __FILE__, __func__,
-	       __LINE__);
+	//printk(KERN_ERR "%s %s %d: adb_bind() could not allocate requests\n", __FILE__, __func__,
+	//       __LINE__);
 	return -1;
 }
 
@@ -913,7 +913,7 @@ static int adb_bind_config(struct usb_configuration *c)
 {
 	struct adb_dev *dev = _adb_dev;
 
-	printk(KERN_INFO "%s %s %d\n", __FILE__, __func__, __LINE__);
+	//printk(KERN_INFO "%s %s %d\n", __FILE__, __func__, __LINE__);
 
 	dev->cdev = c->cdev;
 	dev->function.name = "adb";

@@ -557,7 +557,7 @@ int tinno_platform_adapter(void)
 	char temp_buf[TINNO_CMD_CONFIG_SIZE][32] = {0};
 	char *p, *q;
 	int i;
-    pr_notice("----wlj----  entry tinno_platform_adapter \n");
+    //pr_notice("----wlj----  entry tinno_platform_adapter \n");
 
 	device_info_entry=proc_mkdir("Tinno_devinfo",NULL);
 	CAREAT_TINNO_DEV_INFO(Market_Area);
@@ -1005,7 +1005,7 @@ static void __init do_basic_setup(void)
 	shmem_init();
     
 #ifdef CONFIG_WIKO_UNIFY
-    pr_notice("----wlj----  call tinno_platform_adapter \n");
+    //pr_notice("----wlj----  call tinno_platform_adapter \n");
     tinno_platform_adapter();
 #endif
 

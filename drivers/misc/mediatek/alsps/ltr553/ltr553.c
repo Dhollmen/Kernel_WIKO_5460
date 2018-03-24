@@ -90,7 +90,6 @@ extern unsigned int mt65xx_eint_set_sens(unsigned int eint_num, unsigned int sen
 extern void mt65xx_eint_registration(unsigned int eint_num, unsigned int is_deb_en, unsigned int pol, void (EINT_FUNC_PTR)(void), unsigned int is_auto_umask);
 #endif
 
-
 /******************************************************************************
  * configuration
 *******************************************************************************/
@@ -104,7 +103,7 @@ extern void mt65xx_eint_registration(unsigned int eint_num, unsigned int is_deb_
 #define APS_TAG "[ALS/PS] "
 //#define APS_DEBUG
 #if defined(APS_DEBUG)
-#define APS_FUN(f)      printk(KERN_INFO APS_TAG"%s\n", __FUNCTION__)
+#define APS_FUN(f)              printk(KERN_INFO APS_TAG"%s\n", __FUNCTION__)
 #define APS_ERR(fmt, args...)   printk(KERN_ERR APS_TAG"%s %d : "fmt, __FUNCTION__, __LINE__, ##args)
 #define APS_LOG(fmt, args...)   printk(KERN_ERR APS_TAG "%s(%d):" fmt, __FUNCTION__, __LINE__, ##args)
 #define APS_DBG(fmt, args...)   printk(KERN_ERR fmt, ##args)
@@ -115,13 +114,11 @@ extern void mt65xx_eint_registration(unsigned int eint_num, unsigned int is_deb_
 #define APS_DBG(fmt, args...)
 #endif
 
-
 #define GN_MTK_BSP_ALSPS_INTERRUPT_MODE
 //#define GN_MTK_BSP_PS_DYNAMIC_CALI
 #define CONFIG_TINNO_PS_CALI
 #ifdef CONFIG_TINNO_PS_CALI
 #define FEATURE_PS_CALIBRATION
-
 
 #define LOW_TEMPERATURE
 #endif
@@ -884,18 +881,18 @@ int ltr553_read_data_ps(struct i2c_client *client, int *data)
 
     if (hwmsen_read_byte_sr(client, APS_RO_PS_DATA_0, &psval_lo))
     {
-        printk("reads aps data = %d\n", psval_lo);
+        // printk("reads aps data = %d\n", psval_lo);
         return -EFAULT;
     }
 
     if (hwmsen_read_byte_sr(client, APS_RO_PS_DATA_1, &psval_hi))
     {
-        printk("reads aps hi data = %d\n", psval_hi);
+        // printk("reads aps hi data = %d\n", psval_hi);
         return -EFAULT;
     }
 
     psdata = ((psval_hi & 0x87) * 256) + psval_lo;
-    printk("psensor rawdata is:%d\n", psdata);
+    // printk("psensor rawdata is:%d\n", psdata);
 #ifdef LOW_TEMPERATURE
         psdata=set_low_temperature_threshold_value(obj,psdata);
 #endif
@@ -3309,7 +3306,7 @@ int ltr553_get_ps_status(void)
 	u8 buffer=0;
     struct ltr553_priv *obj = (struct ltr553_priv *)ltr553_obj;
 
-    printk("%s\n", __func__);
+    // printk("%s\n", __func__);
 	
     // Enable PS
     if (!test_bit(CMC_BIT_PS, &obj->enable))
@@ -3352,7 +3349,7 @@ int ltr553_get_ps_status(void)
         clear_bit(CMC_BIT_PS, &obj->enable);
     }
 
-    printk("ps_status %d, clear_flag=%d\n", ps_status, clear_flag);
+    // printk("ps_status %d, clear_flag=%d\n", ps_status, clear_flag);
 
     return ps_status;
 }
@@ -3360,59 +3357,12 @@ EXPORT_SYMBOL(ltr553_get_ps_status);
 
 #endif
 
-
-/*----------------------------------------------------------------------------*/
-/*
-static int ltr553_probe(struct platform_device *pdev)
-{
- //   struct alsps_hw *hw = get_cust_alsps_hw();
-    APS_FUN();
-
-    ltr553_power(hw,1);
-    if(i2c_add_driver(&ltr553_i2c_driver))
-    {
-        APS_ERR("add driver error\n");
-        return -1;
-    }
-
-    if(-1 == ltr553_init_flag)
-    {
-        return -1;
-    }
-
-    return 0;
-}
-
-static int ltr553_remove(struct platform_device *pdev)
-{
-  //  struct alsps_hw *hw = get_cust_alsps_hw();
-    APS_FUN();
-    ltr553_power(hw, 0);
-    i2c_del_driver(&ltr553_i2c_driver);
-    return 0;
-}
-
-static struct platform_driver ltr553_alsps_driver =
-{
-    .probe  = ltr553_probe,
-    .remove = ltr553_remove,
-    .driver = {
-        .name   = "als_ps",
-//      .owner  = THIS_MODULE,
-    }
-};
-*/
-
 static int __init ltr553_init(void)
 {
-   // struct alsps_hw *hw = get_cust_alsps_hw();
-       const char *name = "mediatek,ltr553";
-   // hw =   get_alsps_dts_func(name, hw);
-	//if (!hw)
+    const char *name = "mediatek,ltr553";
 	hw =   get_alsps_dts_func(name, hw);
 #ifdef CONFIG_MTK_LEGACY
     APS_LOG("%s: i2c_number=%d\n", __func__,hw->i2c_num);
-    //wake_lock_init(&ps_wake_lock,WAKE_LOCK_SUSPEND,"ps module");
 struct i2c_board_info i2c_ltr553= { I2C_BOARD_INFO(ltr553_DEV_NAME, (ltr553_I2C_SLAVE_ADDR))};
 	i2c_register_board_info(hw->i2c_num, &i2c_ltr553, 1);  //xiaoqian, 20120412, add for alsps
 #endif

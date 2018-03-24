@@ -1146,7 +1146,7 @@ static kal_uint32 OV5648MIPI_get_imgsensor_id_darling(UINT32 *sensor_id)
    // check if sensor ID correct
     *sensor_id=((OV5648MIPI_read_cmos_sensor_darling(0x300A) << 8) | OV5648MIPI_read_cmos_sensor_darling(0x300B));   
 
-    printk("YC Sensor ID: 0x%x ", *sensor_id);
+    //printk("YC Sensor ID: 0x%x ", *sensor_id);
         
     if (*sensor_id != OV5648MIPI_SENSOR_ID) {
         // if Sensor ID is not correct, Must set *sensorID to 0xFFFFFFFF 
@@ -1167,7 +1167,7 @@ static kal_uint32 OV5648MIPI_get_imgsensor_id_darling(UINT32 *sensor_id)
     // strcpy(OV5648MIPI_sensor.vendor, "Darling");
      //spin_unlock(&imgsensor_drv_lock);
 
-    printk("Darling Sensor ID: 0x%x ", *sensor_id);
+    //printk("Darling Sensor ID: 0x%x ", *sensor_id);
 	
     return ERROR_NONE;
 }

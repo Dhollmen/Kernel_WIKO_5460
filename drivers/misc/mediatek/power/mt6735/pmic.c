@@ -1964,6 +1964,7 @@ void battery_oc_protect_reinit(void)
 	pmic_set_register_value(PMIC_FG_CUR_LTH, BAT_OC_L_THD_RE);
 	/*mt6325_upmu_set_fg_cur_lth(BAT_OC_L_THD_RE); */
 
+    /*
 	pr_err("Reg[0x%x]=0x%x, Reg[0x%x]=0x%x, Reg[0x%x]=0x%x\n",
 	       MT6328_FGADC_CON23, upmu_get_reg_value(MT6328_FGADC_CON23),
 	       MT6328_FGADC_CON24, upmu_get_reg_value(MT6328_FGADC_CON24),
@@ -1973,8 +1974,9 @@ void battery_oc_protect_reinit(void)
 	pr_err("[battery_oc_protect_reinit] %d mA, %d mA\n",
 	       POWER_BAT_OC_CURRENT_H_RE, POWER_BAT_OC_CURRENT_L_RE);
 	pr_err("[battery_oc_protect_reinit] Done\n");
+	*/
 #else
-	pr_warn("[battery_oc_protect_reinit] no define BATTERY_OC_PROTECT\n");
+	// pr_warn("[battery_oc_protect_reinit] no define BATTERY_OC_PROTECT\n");
 #endif
 }
 #endif				/* #ifdef BATTERY_OC_PROTECT */

@@ -68,6 +68,7 @@ void __iomem *clk_venc_gcon_base;
 
 #define TAG     "[Power/clkmgr] "
 
+#if 0
 #define clk_err(fmt, args...)       \
 	pr_err(TAG fmt, ##args)
 #define clk_warn(fmt, args...)      \
@@ -76,7 +77,12 @@ void __iomem *clk_venc_gcon_base;
 	pr_info(TAG fmt, ##args)
 #define clk_dbg(fmt, args...)       \
 	pr_debug(TAG fmt, ##args)
-
+#else
+#define clk_err(fmt, args...) 
+#define clk_warn(fmt, args...)
+#define clk_info(fmt, args...)
+#define clk_dbg(fmt, args...) 
+#endif
 
 /************************************************
  **********      register access       **********

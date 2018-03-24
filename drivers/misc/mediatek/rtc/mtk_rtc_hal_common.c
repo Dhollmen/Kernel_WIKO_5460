@@ -22,6 +22,7 @@
 #include <mtk_rtc_hal_common.h>
 #include <mt_pmic_wrap.h>
 
+#if 0
 #define hal_rtc_xinfo(fmt, args...)		\
 		pr_notice(fmt, ##args)
 
@@ -30,7 +31,11 @@
 
 #define hal_rtc_xfatal(fmt, args...)	\
 		pr_emerg(fmt, ##args)
-
+#else
+#define hal_rtc_xinfo(fmt, args...)
+#define hal_rtc_xerror(fmt, args...)
+#define hal_rtc_xfatal(fmt, args...)
+#endif
 
 u16 rtc_read(u16 addr)
 {

@@ -451,7 +451,7 @@ void __enable_irq(struct irq_desc *desc, unsigned int irq)
 	switch (desc->depth) {
 	case 0:
  err_out:
-		WARN(1, KERN_WARNING "Unbalanced enable for IRQ %d\n", irq);
+		//WARN(1, KERN_WARNING "Unbalanced enable for IRQ %d\n", irq);
 		break;
 	case 1: {
 		if (desc->istate & IRQS_SUSPENDED)
@@ -543,7 +543,7 @@ int irq_set_irq_wake(unsigned int irq, unsigned int on)
 		}
 	} else {
 		if (desc->wake_depth == 0) {
-			WARN(1, "Unbalanced IRQ %d wake disable\n", irq);
+			//WARN(1, "Unbalanced IRQ %d wake disable\n", irq);
 		} else if (--desc->wake_depth == 0) {
 			ret = set_irq_wake_real(irq, on);
 			if (ret)
@@ -667,7 +667,7 @@ static irqreturn_t irq_default_primary_handler(int irq, void *dev_id)
  */
 static irqreturn_t irq_nested_primary_handler(int irq, void *dev_id)
 {
-	WARN(1, "Primary handler called for nested irq %d\n", irq);
+	//WARN(1, "Primary handler called for nested irq %d\n", irq);
 	return IRQ_NONE;
 }
 
@@ -835,8 +835,8 @@ static void irq_thread_dtor(struct callback_head *unused)
 
 	action = kthread_data(tsk);
 
-	pr_err("exiting task \"%s\" (%d) is an active IRQ thread (irq %d)\n",
-	       tsk->comm, tsk->pid, action->irq);
+	//pr_err("exiting task \"%s\" (%d) is an active IRQ thread (irq %d)\n",
+	//       tsk->comm, tsk->pid, action->irq);
 
 
 	desc = irq_to_desc(action->irq);
@@ -1197,14 +1197,14 @@ __setup_irq(unsigned int irq, struct irq_desc *desc, struct irqaction *new)
 
 		/* Set default affinity mask once everything is setup */
 		setup_affinity(irq, desc, mask);
-	} else if (new->flags & IRQF_TRIGGER_MASK) {
-		unsigned int nmsk = new->flags & IRQF_TRIGGER_MASK;
-		unsigned int omsk = irq_settings_get_trigger_mask(desc);
+//	} else if (new->flags & IRQF_TRIGGER_MASK) {
+//		unsigned int nmsk = new->flags & IRQF_TRIGGER_MASK;
+//		unsigned int omsk = irq_settings_get_trigger_mask(desc);
 
-		if (nmsk != omsk)
-			/* hope the handler works with current  trigger mode */
-			pr_warning("irq %d uses trigger mode %u; requested %u\n",
-				   irq, nmsk, omsk);
+// 		if (nmsk != omsk)
+// 			/* hope the handler works with current  trigger mode */
+// 			pr_warning("irq %d uses trigger mode %u; requested %u\n",
+// 				   irq, nmsk, omsk);
 	}
 
 	new->irq = irq;
@@ -1300,7 +1300,7 @@ static struct irqaction *__free_irq(unsigned int irq, void *dev_id)
 	struct irqaction *action, **action_ptr;
 	unsigned long flags;
 
-	WARN(in_interrupt(), "Trying to free IRQ %d from IRQ context!\n", irq);
+	//WARN(in_interrupt(), "Trying to free IRQ %d from IRQ context!\n", irq);
 
 	if (!desc)
 		return NULL;
@@ -1316,7 +1316,7 @@ static struct irqaction *__free_irq(unsigned int irq, void *dev_id)
 		action = *action_ptr;
 
 		if (!action) {
-			WARN(1, "Trying to free already-free IRQ %d\n", irq);
+			//WARN(1, "Trying to free already-free IRQ %d\n", irq);
 			raw_spin_unlock_irqrestore(&desc->lock, flags);
 
 			return NULL;
@@ -1590,7 +1590,7 @@ void enable_percpu_irq(unsigned int irq, unsigned int type)
 		ret = __irq_set_trigger(desc, irq, type);
 
 		if (ret) {
-			WARN(1, "failed to set type for IRQ%d\n", irq);
+			//WARN(1, "failed to set type for IRQ%d\n", irq);
 			goto out;
 		}
 	}
@@ -1624,7 +1624,7 @@ static struct irqaction *__free_percpu_irq(unsigned int irq, void __percpu *dev_
 	struct irqaction *action;
 	unsigned long flags;
 
-	WARN(in_interrupt(), "Trying to free IRQ %d from IRQ context!\n", irq);
+	//WARN(in_interrupt(), "Trying to free IRQ %d from IRQ context!\n", irq);
 
 	if (!desc)
 		return NULL;
@@ -1633,13 +1633,13 @@ static struct irqaction *__free_percpu_irq(unsigned int irq, void __percpu *dev_
 
 	action = desc->action;
 	if (!action || action->percpu_dev_id != dev_id) {
-		WARN(1, "Trying to free already-free IRQ %d\n", irq);
+		//WARN(1, "Trying to free already-free IRQ %d\n", irq);
 		goto bad;
 	}
 
 	if (!cpumask_empty(desc->percpu_enabled)) {
-		WARN(1, "percpu IRQ %d still enabled on CPU%d!\n",
-		     irq, cpumask_first(desc->percpu_enabled));
+		//WARN(1, "percpu IRQ %d still enabled on CPU%d!\n",
+		//     irq, cpumask_first(desc->percpu_enabled));
 		goto bad;
 	}
 

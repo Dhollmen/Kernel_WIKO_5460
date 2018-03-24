@@ -1482,8 +1482,8 @@ static void mtk_uart_cal_baud(struct mtk_uart *uart, int baudrate, int highspeed
 	}
 	spin_unlock_irqrestore(&mtk_console_lock, flags);
 
-	MSG(CFG, "BaudRate = %d, SysClk = %d, Divisor = %d, %04X/%04X\n", baudrate, uartclk, divisor,
-	    UART_READ32(UART_IER), UART_READ32(UART_LCR));
+	//MSG(CFG, "BaudRate = %d, SysClk = %d, Divisor = %d, %04X/%04X\n", baudrate, uartclk, divisor,
+	//    UART_READ32(UART_IER), UART_READ32(UART_LCR));
 	dump_reg(uart, __func__);
 	mb();			/*to ensure the setting is written */
 }

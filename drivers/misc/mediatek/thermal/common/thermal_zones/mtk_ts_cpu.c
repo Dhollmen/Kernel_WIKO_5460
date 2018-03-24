@@ -387,7 +387,7 @@ void tscpu_print_all_temperature(int isDprint)
 void set_taklking_flag(bool flag)
 {
 	talking_flag = flag;
-	tscpu_printk("talking_flag=%d\n", talking_flag);
+	//tscpu_printk("talking_flag=%d\n", talking_flag);
 }
 
 int mtk_gpufreq_register(struct mt_gpufreq_power_table_info *freqs, int num)
@@ -459,7 +459,7 @@ static int tscpu_bind(struct thermal_zone_device *thermal, struct thermal_coolin
 		return -EINVAL;
 	}
 
-	tscpu_printk("tscpu_bind binding OK, %d\n", table_val);
+	//tscpu_printk("tscpu_bind binding OK, %d\n", table_val);
 	return 0;
 }
 
@@ -508,7 +508,7 @@ static int tscpu_unbind(struct thermal_zone_device *thermal, struct thermal_cool
 		return -EINVAL;
 	}
 
-	tscpu_printk("tscpu_unbind unbinding OK\n");
+	//tscpu_printk("tscpu_unbind unbinding OK\n");
 	return 0;
 }
 
@@ -716,8 +716,8 @@ void tscpu_set_GPIO_toggle_for_monitor(void)
 			lv_GPIO118_DIR = thermal_readl(GPIO118_DIR);
 			lv_GPIO118_DOUT = thermal_readl(GPIO118_DOUT);
 
-			tscpu_printk("tscpu_set_GPIO_toggle_for_monitor:lv_GPIO118_MODE=0x%x,", lv_GPIO118_MODE);
-			tscpu_printk("lv_GPIO118_DIR=0x%x,lv_GPIO118_DOUT=0x%x,\n", lv_GPIO118_DIR, lv_GPIO118_DOUT);
+			//tscpu_printk("tscpu_set_GPIO_toggle_for_monitor:lv_GPIO118_MODE=0x%x,", lv_GPIO118_MODE);
+			//tscpu_printk("lv_GPIO118_DIR=0x%x,lv_GPIO118_DOUT=0x%x,\n", lv_GPIO118_DIR, lv_GPIO118_DOUT);
 
 
 			/* thermal_clrl(GPIO118_MODE,0x00000E00);//clear GPIO118_MODE[11:9] */
@@ -792,18 +792,18 @@ static ssize_t tscpu_write_GPIO_out(struct file *file, const char __user *buffer
 
 		if (!strcmp(TEMP, "TEMP")) {
 			g_trigger_temp = valTEMP;
-			tscpu_printk("g_trigger_temp=%d\n", valTEMP);
+			//tscpu_printk("g_trigger_temp=%d\n", valTEMP);
 		} else {
-			tscpu_printk("tscpu_write_GPIO_out TEMP bad argument\n");
+			//tscpu_printk("tscpu_write_GPIO_out TEMP bad argument\n");
 			return -EINVAL;
 		}
 
 		if (!strcmp(ENABLE, "ENABLE")) {
 			g_GPIO_out_enable = valENABLE;
-			tscpu_printk("g_GPIO_out_enable=%d,g_GPIO_already_set=%d\n", valENABLE,
-				     g_GPIO_already_set);
+			//tscpu_printk("g_GPIO_out_enable=%d,g_GPIO_already_set=%d\n", valENABLE,
+			//	     g_GPIO_already_set);
 		} else {
-			tscpu_printk("tscpu_write_GPIO_out ENABLE bad argument\n");
+			//tscpu_printk("tscpu_write_GPIO_out ENABLE bad argument\n");
 			return -EINVAL;
 		}
 
@@ -817,7 +817,7 @@ static ssize_t tscpu_write_GPIO_out(struct file *file, const char __user *buffer
 		return count;
 	}
 
-	tscpu_printk("tscpu_write_GPIO_out bad argument\n");
+	//tscpu_printk("tscpu_write_GPIO_out bad argument\n");
 	return -EINVAL;
 }
 #endif
@@ -1024,14 +1024,14 @@ static ssize_t tscpu_write_fastpoll(struct file *file, const char __user *buffer
 	desc[len] = '\0';
 
 	if (2 <= sscanf(desc, "%d %d", &trip, &factor)) {
-		tscpu_printk("tscpu_write_fastpoll input %d %d\n", trip, factor);
+		//tscpu_printk("tscpu_write_fastpoll input %d %d\n", trip, factor);
 
 		if ((trip >= 0) && (factor > 0)) {
 			fast_polling_trip_temp = trip;
 			fast_polling_factor = factor;
 
-			tscpu_printk("tscpu_write_fastpoll applied %d %d\n", fast_polling_trip_temp,
-				     fast_polling_factor);
+			//tscpu_printk("tscpu_write_fastpoll applied %d %d\n", fast_polling_trip_temp,
+			//	     fast_polling_factor);
 		} else {
 			tscpu_dprintk("tscpu_write_fastpoll out of range\n");
 		}

@@ -316,7 +316,7 @@ int kdCISModulePowerOn(CAMERA_DUAL_CAMERA_SENSOR_ENUM SensorIdx, char *currSenso
         if (currSensorName && (0 == strcmp("s5k3m2mipiraw", currSensorName)))
         {
 
-            printk("YC	currSensorName:  %s 	 power up	!!!!!!!!!!!!!!!!!!\n", currSensorName);
+            //printk("YC	currSensorName:  %s 	 power up	!!!!!!!!!!!!!!!!!!\n", currSensorName);
 
             if (GPIO_CAMERA_INVALID != pinSet[pinSetIdx][IDX_PS_CMPDN])
                 mtkcam_gpio_set(pinSetIdx, CAMPDN, pinSet[pinSetIdx][IDX_PS_CMPDN + IDX_PS_OFF]);
@@ -397,7 +397,7 @@ int kdCISModulePowerOn(CAMERA_DUAL_CAMERA_SENSOR_ENUM SensorIdx, char *currSenso
 
         else if (currSensorName && ((0 == strcmp("ov5648mipi_darling", currSensorName)) || (0 == strcmp("ov5648mipi_sunwin", currSensorName))))
         {
-            printk("YC  currSensorName:	%s		power up Start	!!!!!!!!!!!!!!!!!!\n", currSensorName);
+            //printk("YC  currSensorName:	%s		power up Start	!!!!!!!!!!!!!!!!!!\n", currSensorName);
 
             //First Power Pin low and Reset Pin Low
             //if (GPIO_CAMERA_INVALID != pinSet[pinSetIdx][IDX_PS_CMPDN])
@@ -465,7 +465,7 @@ int kdCISModulePowerOn(CAMERA_DUAL_CAMERA_SENSOR_ENUM SensorIdx, char *currSenso
                 }
             }
 #endif
-            printk("YC	currSensorName:  %s 	 power up  EnD !!!!!!!!!!!!!!!!!!\n", currSensorName);
+            //printk("YC	currSensorName:  %s 	 power up  EnD !!!!!!!!!!!!!!!!!!\n", currSensorName);
 
         }
         else
@@ -484,7 +484,7 @@ int kdCISModulePowerOn(CAMERA_DUAL_CAMERA_SENSOR_ENUM SensorIdx, char *currSenso
 
         if (currSensorName && (0 == strcmp("s5k3m2mipiraw", currSensorName)))
         {
-            printk("YC  currSensorName:  %s	   power down	!!!!!!!!!!!!!!!!!!\n", currSensorName);
+            //printk("YC  currSensorName:  %s	   power down	!!!!!!!!!!!!!!!!!!\n", currSensorName);
             //First Power Pin low and Reset Pin Low
             if (GPIO_CAMERA_INVALID != pinSet[pinSetIdx][IDX_PS_CMPDN])
                 mtkcam_gpio_set(pinSetIdx, CAMPDN, pinSet[pinSetIdx][IDX_PS_CMPDN + IDX_PS_OFF]);
@@ -521,7 +521,7 @@ int kdCISModulePowerOn(CAMERA_DUAL_CAMERA_SENSOR_ENUM SensorIdx, char *currSenso
         }
         else if (currSensorName && ((0 == strcmp("ov5648mipi_darling", currSensorName)) || (0 == strcmp("ov5648mipi_sunwin", currSensorName))))
         {
-            printk("YC  currSensorName:  %s	   power down	!!!!!!!!!!!!!!!!!!\n", currSensorName);
+            //printk("YC  currSensorName:  %s	   power down	!!!!!!!!!!!!!!!!!!\n", currSensorName);
 
             //First Power Pin low and Reset Pin Low
             /* Set Power Pin low and Reset Pin Low */

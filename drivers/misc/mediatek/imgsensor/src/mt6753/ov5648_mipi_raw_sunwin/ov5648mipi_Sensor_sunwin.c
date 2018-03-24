@@ -1164,7 +1164,7 @@ static kal_uint32 OV5648MIPI_get_imgsensor_id_sunwin(UINT32 *sensor_id)
     // strcpy(OV5648MIPI_sensor.vendor, "sunwin");
     // spin_unlock(&imgsensor_drv_lock);
 
-    printk("sunwin Sensor ID: 0x%x ", *sensor_id);
+    //printk("sunwin Sensor ID: 0x%x ", *sensor_id);
 	
     return ERROR_NONE;
 }

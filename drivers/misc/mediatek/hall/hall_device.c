@@ -109,26 +109,19 @@
 #include <linux/module.h>
 #include <linux/types.h>
 
-
-
-/*------
-----------------------------------------------------------------
+/*--------------------------------------------------------------------
 static variable defination
 ----------------------------------------------------------------------*/
 
 //#define HALL_DEVNAME    "hall_dev"
 
-#define EN_DEBUG
+//#define EN_DEBUG
 
 #if defined(EN_DEBUG)
-		
 #define TRACE_FUNC 	printk("[hall_dev] function: %s, line: %d \n", __func__, __LINE__);
-
 #define HALL_DEBUG  printk
 #else
-
 #define TRACE_FUNC(x,...)
-
 #define HALL_DEBUG(x,...)
 #endif
 
@@ -144,7 +137,7 @@ static variable defination
 /*******static function defination                             **/
 /****************************************************************/
 
-static struct device *hall_nor_device = NULL;
+//static struct device *hall_nor_device = NULL;
 static struct input_dev *hall_input_dev;
 static  int cur_hall_status = HALL_OPEN;
 struct wake_lock hall_key_lock;
@@ -268,8 +261,6 @@ static ssize_t notify_sendKeyEvent(int event)
 #ifdef CONFIG_OF
 static irqreturn_t hall_eint_func(int irq,void *data)
 {
-	int ret=0;
-
 	HALL_DEBUG("hall_eint_func \n");	
 	if(cur_hall_status ==  HALL_CLOSE ) 
 	{
@@ -305,7 +296,7 @@ static irqreturn_t hall_eint_func(int irq,void *data)
 static void hall_eint_func(unsigned long data)
 {
     
-    TRACE_FUNC;
+    //TRACE_FUNC;
 
     mt65xx_eint_mask(HALL_SWITCH_EINT);
 
@@ -333,7 +324,8 @@ static  int hall_setup_eint(void)
 	int ret;
 #ifdef CONFIG_OF
 	u32 ints[2]={0,0};
-	unsigned int gpiopin, debounce;
+	//unsigned int gpiopin;
+	//unsigned int debounce;
 	struct device_node *node;
 #endif
 	struct pinctrl_state *pins_cfg;
@@ -385,7 +377,7 @@ static int hall_probe(struct platform_device *pdev)
     int ret = 0;
     struct task_struct *keyEvent_thread = NULL;
 
-    TRACE_FUNC;
+    //TRACE_FUNC;
 	
 		hallpinctrl = devm_pinctrl_get(&pdev->dev);
 		if (IS_ERR(hallpinctrl)) {
@@ -452,13 +444,17 @@ static int hall_remove(struct platform_device *dev)
 
 static int __init hall_init(void)
 {
+#ifdef CONFIG_MTK_LEGACY    
+#if defined(CONFIG_OF)    
 	int ret = 0;
-    TRACE_FUNC;
+#endif
+#endif
+    //TRACE_FUNC;
 #ifdef CONFIG_WIKO_UNIFY    
     extern int Hall;
     if (Hall == 0)
     {
-    		HALL_DEBUG("[hall_dev]:Hall == 0!\n");
+    	HALL_DEBUG("[hall_dev]:Hall == 0!\n");
         return 0;
     }
 #endif
@@ -486,7 +482,7 @@ static int __init hall_init(void)
 
 static void __exit hall_exit(void)
 {
-    TRACE_FUNC;
+    //TRACE_FUNC;
     platform_driver_unregister(&hall_driver);
 }
 

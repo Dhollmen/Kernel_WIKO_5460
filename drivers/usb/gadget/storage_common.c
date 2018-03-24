@@ -53,14 +53,19 @@
 #define VLDBG(lun, fmt, args...) do { } while (0)
 #endif /* VERBOSE_DEBUG */
 
+#ifdef VERBOSE_DEBUG
 #define LDBG(lun, fmt, args...)   dev_dbg (&(lun)->dev, fmt, ## args)
 #define LERROR(lun, fmt, args...) dev_err (&(lun)->dev, fmt, ## args)
 #define LWARN(lun, fmt, args...)  dev_warn(&(lun)->dev, fmt, ## args)
 #define LINFO(lun, fmt, args...)  dev_info(&(lun)->dev, fmt, ## args)
-
+#else  /* ! VERBOSE_DEBUG */
+#define LDBG(lun, fmt, args...) do { } while (0)
+#define LERROR(lun, fmt, args...) do { } while (0)
+#define LWARN(lun, fmt, args...) do { } while (0)
+#define LINFO(lun, fmt, args...) do { } while (0)
+#endif  /* VERBOSE_DEBUG */
 
 #ifdef DUMP_MSGS
-
 #  define dump_msg(fsg, /* const char * */ label,			\
 		   /* const u8 * */ buf, /* unsigned */ length) do {	\
 	if (length < 512) {						\
@@ -69,24 +74,18 @@
 			       16, 1, buf, length, 0);			\
 	}								\
 } while (0)
-
 #  define dump_cdb(fsg) do { } while (0)
 
 #else
 
 #  define dump_msg(fsg, /* const char * */ label, \
 		   /* const u8 * */ buf, /* unsigned */ length) do { } while (0)
-
 #  ifdef VERBOSE_DEBUG
-
-#    define dump_cdb(fsg)						\
-	print_hex_dump(KERN_DEBUG, "SCSI CDB: ", DUMP_PREFIX_NONE,	\
+#   define dump_cdb(fsg)						\
+	 print_hex_dump(KERN_DEBUG, "SCSI CDB: ", DUMP_PREFIX_NONE,	\
 		       16, 1, (fsg)->cmnd, (fsg)->cmnd_size, 0)		\
-
-#  else
-
-#    define dump_cdb(fsg) do { } while (0)
-
+#else
+# define dump_cdb(fsg) do { } while (0)
 #  endif /* VERBOSE_DEBUG */
 
 #endif /* DUMP_MSGS */

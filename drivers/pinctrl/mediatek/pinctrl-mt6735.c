@@ -324,7 +324,7 @@ static const struct mtk_pinctrl_devdata mt6735_pinctrl_data = {
 
 static int mt6735_pinctrl_probe(struct platform_device *pdev)
 {
-	pr_warn("mt6735 pinctrl probe\n");
+	//pr_warn("mt6735 pinctrl probe\n");
 	return mtk_pctrl_init(pdev, &mt6735_pinctrl_data, NULL);
 }
 

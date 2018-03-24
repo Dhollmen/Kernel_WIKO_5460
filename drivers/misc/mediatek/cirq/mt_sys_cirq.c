@@ -870,7 +870,7 @@ int __init mt_cirq_init(void)
 		pr_debug
 		("[CIRQ] CIRQ create sysfs file for pattern list setup...\n");
 
-	pr_warn("### CIRQ init done. ###\n");
+	pr_info("CIRQ init done.\n");
 
 	return 0;
 }

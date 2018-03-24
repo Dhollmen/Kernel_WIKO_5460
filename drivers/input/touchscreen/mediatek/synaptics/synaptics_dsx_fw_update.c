@@ -26,7 +26,7 @@
 #include <linux/firmware.h>
 #include "synaptics_dsx.h"
 #include "synaptics_dsx_i2c.h"
-#if 1
+#if 0
 #define CTP_DBG(fmt, arg...) \
 	printk("[CTP-synaptics] %s (line:%ld) :" fmt "\r\n", __func__, __LINE__, ## arg)
 #else

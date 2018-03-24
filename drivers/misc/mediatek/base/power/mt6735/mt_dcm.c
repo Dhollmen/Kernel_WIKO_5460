@@ -112,11 +112,20 @@ static unsigned long ddrphy_base;
 
 #define TAG     "[Power/dcm] "
 /* #define DCM_ENABLE_DCM_CFG */
+
+#if 0
 #define dcm_err(fmt, args...)	pr_err(TAG fmt, ##args)
 #define dcm_warn(fmt, args...)	pr_warn(TAG fmt, ##args)
 #define dcm_info(fmt, args...)	pr_warn(TAG fmt, ##args)
 #define dcm_dbg(fmt, args...)	pr_debug(TAG fmt, ##args)
 #define dcm_ver(fmt, args...)	pr_debug(TAG fmt, ##args)
+#else
+#define dcm_err(fmt, args...)
+#define dcm_warn(fmt, args...)
+#define dcm_info(fmt, args...)
+#define dcm_dbg(fmt, args...)
+#define dcm_ver(fmt, args...)
+#endif
 
 /** macro **/
 #define and(v, a) ((v) & (a))
@@ -1048,7 +1057,8 @@ void dcm_dump_state(int type)
 
 void dcm_dump_regs(void)
 {
-	dcm_info("\n******** dcm dump register *********\n");
+#if 0	
+    dcm_info("\n******** dcm dump register *********\n");
 	REG_DUMP(APMIXED_PLL_CON2);
 	REG_DUMP(MCUCFG_ACLKEN_DIV);
 	REG_DUMP(MCUCFG_L2C_SRAM_CTRL);
@@ -1072,6 +1082,7 @@ void dcm_dump_regs(void)
 	REG_DUMP(DDRPHY_MEMPLL_DIVIDER);
 	REG_DUMP(EMI_CONM);
 	REG_DUMP(EFUSE_REG_DCM_ON);
+#endif
 }
 
 
@@ -1121,7 +1132,7 @@ static ssize_t dcm_state_store(struct kobject *kobj, struct kobj_attribute *attr
 			/* dcm_dump_regs(); */
 		} else if (!strcmp(cmd, "dump")) {
 			dcm_dump_state(mask);
-			dcm_dump_regs();
+			/*dcm_dump_regs();*/
 		} else if (!strcmp(cmd, "set")) {
 			if (sscanf(buf, "%15s %x %d", cmd, &mask, &mode) == 3) {
 				mask &= ALL_DCM_TYPE;
@@ -1287,7 +1298,7 @@ int mt_dcm_init(void)
 	dcm_set_state(ALL_DCM_TYPE, DCM_OFF);
 #endif /* #if !defined (DCM_DEFAULT_ALL_OFF) */
 
-	dcm_dump_regs();
+	//dcm_dump_regs();
 
 #if defined(CONFIG_PM)
 	{
