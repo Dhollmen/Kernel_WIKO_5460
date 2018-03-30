@@ -930,12 +930,12 @@ static ssize_t mtp_read(struct file *fp, char __user *buf,
 		return -EINVAL;
 
 	if (dev->epOut_halt) {
-		printk("%s, line %d: ret %d!! <dev->epOut_halt = %d> reset the out ep \n", __func__, __LINE__, ret, dev->epOut_halt);
+		//printk("%s, line %d: ret %d!! <dev->epOut_halt = %d> reset the out ep \n", __func__, __LINE__, ret, dev->epOut_halt);
 		mdelay(2000);
 		usb_ep_fifo_flush(dev->ep_out);
 		dev->epOut_halt=0;
 		usb_ep_clear_halt(dev->ep_out);
-		printk("%s, line %d: ret %d!! <dev->epOut_halt = %d> finish the reset \n", __func__, __LINE__, ret, dev->epOut_halt);
+		//printk("%s, line %d: ret %d!! <dev->epOut_halt = %d> finish the reset \n", __func__, __LINE__, ret, dev->epOut_halt);
 	}
 
 	spin_lock_irq(&dev->lock);
@@ -1001,7 +1001,7 @@ requeue_req:
 
 	if (!dev->rx_done) {
 		DBG(cdev, "%s, line %d: ret %d!! <!dev->rx_done> dev->state = %d, dev->rx_done = %d \n", __func__, __LINE__, ret, dev->state, dev->rx_done);
-		printk("%s, line %d: ret %d!! <!dev->rx_done> dev->state = %d, dev->rx_done = %d \n", __func__, __LINE__, ret, dev->state, dev->rx_done);
+		//printk("%s, line %d: ret %d!! <!dev->rx_done> dev->state = %d, dev->rx_done = %d \n", __func__, __LINE__, ret, dev->state, dev->rx_done);
 		r = -ECANCELED;
 		dev->state = STATE_ERROR;
 		usb_ep_dequeue(dev->ep_out, req);
@@ -1338,7 +1338,7 @@ static void receive_file_work(struct work_struct *data)
 	smp_rmb();
 
 	if (dev->epOut_halt) {
-		printk("%s, line %d: <dev->epOut_halt = %d> reset the out ep \n", __func__, __LINE__, dev->epOut_halt);
+		//printk("%s, line %d: <dev->epOut_halt = %d> reset the out ep \n", __func__, __LINE__, dev->epOut_halt);
 		mdelay(2000);
 		usb_ep_fifo_flush(dev->ep_out);
 		dev->epOut_halt=0;
@@ -2117,7 +2117,7 @@ mtp_function_bind(struct usb_configuration *c, struct usb_function *f)
 
 	dev->cdev = cdev;
 	DBG(cdev, "mtp_function_bind dev: %p\n", dev);
-	printk("mtp_function_bind dev: %p\n", dev);
+	//printk("mtp_function_bind dev: %p\n", dev);
 
 	/* allocate interface ID(s) */
 	id = usb_interface_id(c, f);
@@ -2165,7 +2165,7 @@ mtp_function_unbind(struct usb_configuration *c, struct usb_function *f)
 	struct mtp_dev	*dev = func_to_mtp(f);
 	struct usb_request *req;
 	int i;
-	printk("%s, line %d: \n", __func__, __LINE__);
+	//printk("%s, line %d: \n", __func__, __LINE__);
 
 	while ((req = mtp_req_get(dev, &dev->tx_idle)))
 		mtp_request_free(req, dev->ep_in);
@@ -2184,7 +2184,7 @@ static int mtp_function_set_alt(struct usb_function *f,
 	struct usb_composite_dev *cdev = f->config->cdev;
 	int ret;
 
-	printk("mtp_function_set_alt intf: %d alt: %d\n", intf, alt);
+	//printk("mtp_function_set_alt intf: %d alt: %d\n", intf, alt);
 
 	ret = config_ep_by_speed(cdev->gadget, f, dev->ep_in);
 	if (ret)
@@ -2257,7 +2257,7 @@ static int mtp_bind_config(struct usb_configuration *c, bool ptp_config)
 	struct mtp_dev *dev = _mtp_dev;
 	int ret = 0;
 
-	printk(KERN_INFO "mtp_bind_config\n");
+	//printk(KERN_INFO "mtp_bind_config\n");
 
 	/* allocate a string ID for our interface */
 	if (mtp_string_defs[INTERFACE_STRING_INDEX].id == 0) {

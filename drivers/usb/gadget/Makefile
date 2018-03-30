@@ -4,7 +4,6 @@
 
 include $(srctree)/drivers/misc/mediatek/Makefile.custom
 
-
 MTK_PLATFORM := $(subst ",,$(CONFIG_MTK_PLATFORM))
 subdir-ccflags-y += -I$(srctree)/drivers/misc/mediatek/include
 subdir-ccflags-y += -I$(srctree)/drivers/misc/mediatek/include/mt-plat/$(MTK_PLATFORM)/include
@@ -13,6 +12,13 @@ subdir-ccflags-y += -I$(srctree)/drivers/misc/mediatek/include/mt-plat
 ccflags-$(CONFIG_MTK_C2K_SUPPORT) += -I$(srctree)/drivers/misc/mediatek/c2k_ccci/
 
 ccflags-$(CONFIG_USB_GADGET_DEBUG) := -DDEBUG
+
+WIKO_UNIFY_DEF := $(WIKO_TYPE)
+ifeq ($(strip $(WIKO_UNIFY_DEF)),unify)
+ccflags-y += -DCONFIG_PROJECT_L5460_WIK_FR
+else
+$(warning "No flag to WIKO_UNIFY_DEF")
+endif
 
 obj-$(CONFIG_USB_GADGET)	+= udc-core.o
 obj-$(CONFIG_USB_LIBCOMPOSITE)	+= libcomposite.o

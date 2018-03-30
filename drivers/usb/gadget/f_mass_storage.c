@@ -229,7 +229,9 @@ static const char fsg_string_interface[] = "Mass Storage";
 
 #include "storage_common.c"
 
-#if defined(CONFIG_PROJECT_P4605_MMX_IN)
+#if defined(CONFIG_PROJECT_L5460_WIK_FR)
+#define PRODUCT_NAME "WIKO FEVER"
+#elif defined(CONFIG_PROJECT_P4605_MMX_IN)
 #define PRODUCT_NAME "Micromax Q427"
 #elif defined(CONFIG_PROJECT_P4601_CLF_PH)
 #define PRODUCT_NAME "Thrill Access"
@@ -240,7 +242,7 @@ static const char fsg_string_interface[] = "Mass Storage";
 #elif defined(CONFIG_PROJECT_P4601_CAS_TR)
 #define PRODUCT_NAME "CASPER_VIA_E1"
 #else
-#define PRODUCT_NAME "Wiko Fever"
+#define PRODUCT_NAME "MT65xx Mass Storage"
 #endif
 #define MASS_NAME "File-CD Gadget"
 
@@ -1740,7 +1742,7 @@ static int send_status(struct fsg_common *common)
 		vfs_fsync(curlun->filp, 1);
 		do_gettimeofday(&tv_after);
 		if( (tv_after.tv_sec - tv_before.tv_sec) >= ICUSB_FSYNC_MAGIC_TIME){
-			printk(KERN_WARNING "time spent more than %d sec, sec : %d, usec : %d\n", ICUSB_FSYNC_MAGIC_TIME, (unsigned int)(tv_after.tv_sec - tv_before.tv_sec), (unsigned int)(tv_after.tv_usec - tv_before.tv_usec));
+			//printk(KERN_WARNING "time spent more than %d sec, sec : %d, usec : %d\n", ICUSB_FSYNC_MAGIC_TIME, (unsigned int)(tv_after.tv_sec - tv_before.tv_sec), (unsigned int)(tv_after.tv_usec //- tv_before.tv_usec));
 		}
 	}
 #endif
@@ -2132,7 +2134,7 @@ static int do_scsi_command(struct fsg_common *common)
 		break;
 
 	case REZERO_UNIT:
-		printk("Get REZERO_UNIT command = %x\r\n", common->cmnd[1]);
+		//printk("Get REZERO_UNIT command = %x\r\n", common->cmnd[1]);
 		if (common->cmnd[1] == 0xB)
 			common->android_callback(1);
 		else if (common->cmnd[1] == 0xD)

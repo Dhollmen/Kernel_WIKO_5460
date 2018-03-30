@@ -91,7 +91,7 @@ static const char longname[] = "Gadget Android";
 #elif defined(CONFIG_PROJECT_P4601_CLF_PH)
 #define MANUFACTURER_STRING "Cloudfone"
 #define PRODUCT_STRING "Thrill Access"
-#elif defined(CONFIG_PROJECT_l5460_WIK_FR)
+#elif defined(CONFIG_PROJECT_L5460_WIK_FR)
 #define MANUFACTURER_STRING "WIKO"
 #define PRODUCT_STRING "FEVER"
 #elif defined(CONFIG_PROJECT_P4601_WIK_FR)
@@ -2512,8 +2512,8 @@ static int android_bind(struct usb_composite_dev *cdev)
     strncpy(manufacturer_string, MANUFACTURER_STRING, sizeof(manufacturer_string) - 1);
 
 #ifdef CONFIG_WIKO_UNIFY
-	pr_notice("[USB]%s: Market_Area=%s \n", __func__,Market_Area);
-#if defined(CONFIG_PROJECT_l5460_WIK_FR)
+	//pr_notice("[USB]%s: Market_Area=%s \n", __func__,Market_Area);
+#if defined(CONFIG_PROJECT_L5460_WIK_FR)
 	if(!strncmp(Market_Area, "SE", strlen("SE")))
     {
 	    strncpy(product_string, "FEVER Special Edition", sizeof(product_string) - 1);
